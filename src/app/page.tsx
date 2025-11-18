@@ -35,6 +35,18 @@ export default function Home() {
       image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80',
       description: 'Beautiful & Unique',
     },
+    {
+      name: 'Impon',
+      href: '/products?category=impon',
+      image: 'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=600&q=80',
+      description: 'Premium Collection',
+    },
+    {
+      name: 'Guarantee Chains',
+      href: '/products?category=guarantee-chains',
+      image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80',
+      description: 'Durable & Elegant',
+    },
   ];
 
   return (
@@ -79,7 +91,7 @@ export default function Home() {
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Shop by Category</h2>
           <p className="text-muted-foreground">Explore our stunning collections</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
             <Link
               key={category.name}
