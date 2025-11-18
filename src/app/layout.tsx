@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  title: "Sparkle Jewels - Beautiful Imitation Jewellery",
+  title: "SD Jewels - Beautiful Imitation Jewellery",
   description: "Discover beautiful imitation jewellery for every occasion. Quality craftsmanship at affordable prices.",
 };
 
