@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Gem } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
 import { products } from '@/lib/products';
 
@@ -64,8 +64,8 @@ export default function Home() {
         </div>
         <div className="relative z-10 text-center text-white px-4 max-w-3xl mx-auto">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Sparkles className="h-8 w-8" />
-            <h1 className="text-5xl md:text-6xl font-bold">Sparkle Jewels</h1>
+            <Gem className="h-8 w-8" />
+            <h1 className="text-5xl md:text-6xl font-bold">SD Jewels</h1>
           </div>
           <p className="text-xl md:text-2xl mb-8 text-gray-200">
             Discover Beautiful Imitation Jewellery for Every Occasion
@@ -138,7 +138,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="h-8 w-8 text-primary" />
+              <Gem className="h-8 w-8 text-primary" />
             </div>
             <h3 className="text-xl font-semibold mb-2">Quality Craftsmanship</h3>
             <p className="text-muted-foreground">
