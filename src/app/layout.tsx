@@ -6,6 +6,7 @@ import Script from "next/script";
 import { CartProvider } from "@/contexts/CartContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Sparkle Jewels - Beautiful Imitation Jewellery",
@@ -36,6 +37,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </CartProvider>
+        <Toaster position="top-right" richColors />
         <VisualEditsMessenger />
       </body>
     </html>
