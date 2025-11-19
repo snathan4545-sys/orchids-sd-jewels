@@ -2,21 +2,6 @@ import { Product } from '@/types/product';
 
 export const products: Product[] = [
   {
-    id: '1',
-    name: 'Golden Kundan Necklace Set',
-    description: 'Elegant traditional kundan necklace set with matching earrings. Perfect for weddings and special occasions.',
-    price: 2499,
-    originalPrice: 3999,
-    category: 'necklaces',
-    images: [
-      'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80',
-      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',
-    ],
-    colors: ['Gold', 'Rose Gold'],
-    inStock: true,
-    featured: true,
-  },
-  {
     id: '2',
     name: 'Pearl Drop Earrings',
     description: 'Classic pearl drop earrings with delicate gold-plated design. Adds elegance to any outfit.',
@@ -64,20 +49,6 @@ export const products: Product[] = [
     featured: true,
   },
   {
-    id: '5',
-    name: 'Temple Jewellery Necklace',
-    description: 'Traditional South Indian temple jewellery necklace with intricate designs.',
-    price: 3299,
-    originalPrice: 4999,
-    category: 'necklaces',
-    images: [
-      'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800&q=80',
-      'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80',
-    ],
-    colors: ['Antique Gold'],
-    inStock: true,
-  },
-  {
     id: '6',
     name: 'Crystal Chandelier Earrings',
     description: 'Stunning crystal chandelier earrings that sparkle beautifully. Ideal for parties.',
@@ -121,10 +92,10 @@ export const products: Product[] = [
   },
   {
     id: '9',
-    name: 'Krishna Set',
+    name: 'Krishna Pearl Set',
     description: 'Exquisite Krishna-themed necklace and earring set adorned with pearl clusters. Features intricate gold-plated Krishna figurines with traditional craftsmanship. Perfect for festive occasions and weddings.',
-    price: 3499,
-    originalPrice: 4999,
+    price: 750,
+    originalPrice: 850,
     category: 'necklaces',
     images: [
       'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-09-22-at-14.24.33_efb31640-1763490054540.jpg?width=800&height=800&resize=contain',
@@ -138,8 +109,8 @@ export const products: Product[] = [
     id: '10',
     name: 'Haram Set',
     description: 'Traditional South Indian Haram long necklace with intricate coin motifs and goddess pendant. Features antique gold finish with matching peacock-design earrings. A statement piece for grand occasions.',
-    price: 3799,
-    originalPrice: 5499,
+    price: 925,
+    originalPrice: 1000,
     category: 'necklaces',
     images: [
       'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-10-06-at-23.28.05_d591d5fc-1763490054322.jpg?width=800&height=800&resize=contain',
