@@ -180,4 +180,19 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
   },
+  {
+    id: '15',
+    name: 'Lakshmi Pearl Ball Necklace Chain',
+    description: 'Divine Lakshmi-themed pearl ball necklace with ornate Goddess pendant and matching earrings. Features textured golden pearl beads with intricate filigree work and red gemstone accents. A sacred piece for traditional ceremonies and festive celebrations.',
+    price: 760,
+    originalPrice: 940,
+    category: 'necklaces',
+    images: [
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-10-12-at-22.59.17_7a7d52b7-1764611524700.jpg?width=800&height=800&resize=contain',
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-10-12-at-22.59.17_7a7d52b7-1764611524700.jpg?width=800&height=800&resize=contain',
+    ],
+    colors: ['Gold'],
+    inStock: true,
+    featured: true,
+  },
 ];
