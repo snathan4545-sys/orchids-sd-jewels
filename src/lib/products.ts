@@ -211,21 +211,6 @@ export const products: Product[] = [
     featured: true,
   },
   {
-    id: '17',
-    name: 'AD Stone Necklace Chain',
-    description: 'Elegant AD stone necklace chain with white American Diamond stones and intricate gold-plated filigree work. Features layered traditional design with matching earrings and pearl-white crystals. A luxurious piece perfect for weddings and grand celebrations.',
-    price: 799,
-    originalPrice: 999,
-    category: 'necklaces',
-    images: [
-      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/46282aba-8dd0-473b-a403-c4e269b9df9b/generated_images/elegant-ad-stone-necklace-chain-with-whi-f609b508-20251201183936.jpg',
-      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/46282aba-8dd0-473b-a403-c4e269b9df9b/generated_images/elegant-ad-stone-necklace-chain-with-whi-f609b508-20251201183936.jpg',
-    ],
-    colors: ['White'],
-    inStock: true,
-    featured: true,
-  },
-  {
     id: '18',
     name: 'AD Stone Necklace',
     description: 'Stunning AD stone necklace set featuring rectangular American Diamond stones in a magnificent floral vine design. Adorned with gold-plated filigree work, pearl clusters, and sparkling crystals. Available in elegant Purple, vibrant Multicolor, and romantic Light Pink variants. Includes matching earrings with pearl drops. Perfect for weddings and festive celebrations.',
