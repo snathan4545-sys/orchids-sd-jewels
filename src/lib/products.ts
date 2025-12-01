@@ -225,4 +225,20 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
   },
+  {
+    id: '18',
+    name: 'AD Stone Necklace',
+    description: 'Stunning AD stone necklace set featuring rectangular American Diamond stones in a magnificent floral vine design. Adorned with gold-plated filigree work, pearl clusters, and sparkling crystals. Available in elegant Purple, vibrant Multicolor, and romantic Light Pink variants. Includes matching earrings with pearl drops. Perfect for weddings and festive celebrations.',
+    price: 799,
+    originalPrice: 959,
+    category: 'necklaces',
+    images: [
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/36a2ef7a-05da-4377-9a8f-58749a205df1-1764614497106.png?width=800&height=800&resize=contain',
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/c3aafa79-04f9-4e91-9554-7f675cb05b3e-1764614497189.png?width=800&height=800&resize=contain',
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-10-06-at-15.46.18_c83da22d-1764614494912.jpg?width=800&height=800&resize=contain',
+    ],
+    colors: ['Purple', 'Multicolor', 'Light Pink'],
+    inStock: true,
+    featured: true,
+  },
 ];
