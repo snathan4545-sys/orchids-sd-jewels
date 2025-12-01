@@ -165,4 +165,19 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
   },
+  {
+    id: '14',
+    name: 'Crimson Petal Heritage Chain',
+    description: 'Exquisite heritage necklace set featuring vibrant gemstones in dual-layer design with ornate floral motifs. Gold-plated filigree work with matching peacock earrings. Available in stunning red and green variants. Perfect for traditional celebrations.',
+    price: 1220,
+    originalPrice: 1500,
+    category: 'necklaces',
+    images: [
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/green-1764609310525.png?width=800&height=800&resize=contain',
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/red-1764609310676.png?width=800&height=800&resize=contain',
+    ],
+    colors: ['Red', 'Green'],
+    inStock: true,
+    featured: true,
+  },
 ];
