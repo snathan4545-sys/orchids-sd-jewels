@@ -195,4 +195,19 @@ export const products: Product[] = [
     inStock: true,
     featured: true,
   },
+  {
+    id: '16',
+    name: 'Peacock Pearl Necklace',
+    description: 'Exquisite peacock-inspired pearl necklace set with intricate gold-plated design. Features layered pearl clusters forming an elegant collar with ornate peacock motifs and matching chandelier earrings. A stunning traditional piece for weddings and festive occasions.',
+    price: 799,
+    originalPrice: 999,
+    category: 'necklaces',
+    images: [
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/peacock-1764611995596.png?width=800&height=800&resize=contain',
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/peacock-1764611995596.png?width=800&height=800&resize=contain',
+    ],
+    colors: ['White'],
+    inStock: true,
+    featured: true,
+  },
 ];
