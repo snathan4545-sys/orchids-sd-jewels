@@ -1,14 +1,37 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Gem } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
-import { products } from '@/lib/products';
 
 export default function Home() {
-  const featuredProducts = products.filter((p) => p.featured);
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchFeaturedProducts() {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/products?featured=true&limit=4');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const data = await response.json();
+        setFeaturedProducts(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load products');
+        console.error('Error fetching featured products:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchFeaturedProducts();
+  }, []);
   
   const categories = [
     {
@@ -119,18 +142,44 @@ export default function Home() {
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Products</h2>
           <p className="text-muted-foreground">Handpicked favorites just for you</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-        <div className="text-center mt-12">
-          <Link href="/products">
-            <Button size="lg" variant="outline" className="gap-2">
-              View All Products <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
+        
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-card rounded-lg overflow-hidden animate-pulse">
+                <div className="aspect-square bg-muted" />
+                <div className="p-4 space-y-3">
+                  <div className="h-4 bg-muted rounded w-3/4" />
+                  <div className="h-4 bg-muted rounded w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="text-center py-8">
+            <p className="text-destructive mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()}>Retry</Button>
+          </div>
+        ) : featuredProducts.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+            <div className="text-center mt-12">
+              <Link href="/products">
+                <Button size="lg" variant="outline" className="gap-2">
+                  View All Products <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">No featured products available</p>
+          </div>
+        )}
       </section>
 
       {/* Benefits Section */}
