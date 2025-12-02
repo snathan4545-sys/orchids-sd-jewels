@@ -123,7 +123,7 @@ export async function PUT(
     }
 
     if (body.price !== undefined) {
-      const price = parseInt(body.price);
+      const price = typeof body.price === 'number' ? body.price : parseInt(body.price);
       if (isNaN(price) || price <= 0) {
         return NextResponse.json(
           { 
@@ -138,7 +138,7 @@ export async function PUT(
 
     if (body.originalPrice !== undefined) {
       if (body.originalPrice !== null) {
-        const originalPrice = parseInt(body.originalPrice);
+        const originalPrice = typeof body.originalPrice === 'number' ? body.originalPrice : parseInt(body.originalPrice);
         if (isNaN(originalPrice) || originalPrice <= 0) {
           return NextResponse.json(
             { 
@@ -178,7 +178,7 @@ export async function PUT(
           { status: 400 }
         );
       }
-      updates.images = body.images;
+      updates.images = JSON.stringify(body.images);
     }
 
     if (body.colors !== undefined) {
@@ -191,7 +191,7 @@ export async function PUT(
           { status: 400 }
         );
       }
-      updates.colors = body.colors;
+      updates.colors = body.colors !== null ? JSON.stringify(body.colors) : null;
     }
 
     if (body.sizes !== undefined) {
@@ -204,7 +204,7 @@ export async function PUT(
           { status: 400 }
         );
       }
-      updates.sizes = body.sizes;
+      updates.sizes = body.sizes !== null ? JSON.stringify(body.sizes) : null;
     }
 
     if (body.inStock !== undefined) {
