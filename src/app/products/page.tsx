@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
-import { products } from '@/lib/products';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
@@ -15,6 +14,9 @@ export default function ProductsPage() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
 
+  const [products, setProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam || 'all');
   const [priceRange, setPriceRange] = useState<number[]>([0, 5000]);
   const [sortBy, setSortBy] = useState<string>('featured');
@@ -25,27 +27,56 @@ export default function ProductsPage() {
     }
   }, [categoryParam]);
 
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        // Build query parameters
+        const params = new URLSearchParams();
+        if (selectedCategory !== 'all') {
+          params.append('category', selectedCategory);
+        }
+        params.append('priceMin', priceRange[0].toString());
+        params.append('priceMax', priceRange[1].toString());
+        params.append('limit', '100');
+        
+        const response = await fetch(`/api/products?${params.toString()}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load products');
+        console.error('Error fetching products:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchProducts();
+  }, [selectedCategory, priceRange]);
+
   const categories = [
     { value: 'all', label: 'All Products' },
     { value: 'necklaces', label: 'Necklaces' },
     { value: 'earrings', label: 'Earrings' },
     { value: 'bracelets', label: 'Bracelets' },
     { value: 'rings', label: 'Rings' },
+    { value: 'impon', label: 'Impon' },
+    { value: 'guarantee-chains', label: 'Guarantee Chains' },
   ];
 
-  let filteredProducts = products.filter((product) => {
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
-    return matchesCategory && matchesPrice;
-  });
-
   // Sort products
+  let filteredProducts = [...products];
   if (sortBy === 'price-low') {
-    filteredProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
+    filteredProducts.sort((a, b) => a.price - b.price);
   } else if (sortBy === 'price-high') {
-    filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
+    filteredProducts.sort((a, b) => b.price - a.price);
   } else if (sortBy === 'featured') {
-    filteredProducts = [...filteredProducts].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    filteredProducts.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
   }
 
   const FilterSection = () => (
@@ -110,7 +141,7 @@ export default function ProductsPage() {
         <div className="flex-1">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <p className="text-sm text-muted-foreground">
-              Showing {filteredProducts.length} products
+              {isLoading ? 'Loading...' : `Showing ${filteredProducts.length} products`}
             </p>
             <div className="flex gap-2 w-full sm:w-auto">
               {/* Mobile Filter Button */}
@@ -141,7 +172,24 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          {filteredProducts.length === 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-card rounded-lg overflow-hidden animate-pulse">
+                  <div className="aspect-square bg-muted" />
+                  <div className="p-4 space-y-3">
+                    <div className="h-4 bg-muted rounded w-3/4" />
+                    <div className="h-4 bg-muted rounded w-1/2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : error ? (
+            <div className="text-center py-16">
+              <p className="text-destructive mb-4">{error}</p>
+              <Button onClick={() => window.location.reload()}>Retry</Button>
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-muted-foreground mb-4">No products found</p>
               <Button onClick={() => {
