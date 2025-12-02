@@ -13,6 +13,51 @@ export default function CartPage() {
   const router = useRouter();
   const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
 
+  const handlePlaceOrder = () => {
+    // Calculate totals
+    const shipping = cartTotal >= 999 ? 0 : 50;
+    const tax = Math.round(cartTotal * 0.18);
+    const total = cartTotal + tax + shipping;
+
+    // Format order details for WhatsApp
+    let message = `*New Order Request*\n\n`;
+    message += `*Order Details:*\n`;
+    
+    cart.forEach((item, index) => {
+      message += `\n${index + 1}. *${item.name}*\n`;
+      message += `   Quantity: ${item.quantity}\n`;
+      message += `   Price: ₹${item.price} each\n`;
+      if (item.selectedColor) message += `   Color: ${item.selectedColor}\n`;
+      if (item.selectedSize) message += `   Size: ${item.selectedSize}\n`;
+      message += `   Subtotal: ₹${item.price * item.quantity}\n`;
+    });
+
+    message += `\n─────────────────\n`;
+    message += `*Subtotal:* ₹${cartTotal}\n`;
+    message += `*Shipping:* ${shipping === 0 ? 'FREE' : `₹${shipping}`}\n`;
+    message += `*Tax (18%):* ₹${tax}\n`;
+    message += `*Total Amount:* ₹${total}\n`;
+    message += `\nPlease confirm this order.`;
+
+    // Encode message for URL
+    const encodedMessage = encodeURIComponent(message);
+    
+    // WhatsApp number (India country code + number)
+    const whatsappNumber = '919894464215';
+    
+    // Create WhatsApp URL
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    
+    // Clear cart
+    clearCart();
+    
+    // Open WhatsApp
+    window.open(whatsappUrl, '_blank');
+    
+    // Redirect to products page
+    router.push('/products');
+  };
+
   if (cart.length === 0) {
     return (
       <div className="container mx-auto px-4 py-16">
@@ -168,9 +213,9 @@ export default function CartPage() {
             <Button 
               size="lg" 
               className="w-full mb-3 gap-2"
-              onClick={() => router.push('/checkout')}
+              onClick={handlePlaceOrder}
             >
-              Proceed to Checkout <ArrowRight className="h-4 w-4" />
+              Place Order via WhatsApp <ArrowRight className="h-4 w-4" />
             </Button>
 
             <Link href="/products">
@@ -184,7 +229,7 @@ export default function CartPage() {
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
-                <span>Secure checkout</span>
+                <span>Secure via WhatsApp</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
