@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { products } from '@/lib/products';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,17 +14,72 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import ProductCard from '@/components/ProductCard';
 import { toast } from 'sonner';
 
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  originalPrice: number | null;
+  category: string;
+  images: string[];
+  colors: string[] | null;
+  sizes: string[] | null;
+  inStock: boolean;
+  featured: boolean;
+}
+
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { addToCart } = useCart();
   const productId = params.id as string;
 
-  const product = products.find((p) => p.id === productId);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch(`/api/products?id=${productId}`);
+        if (!res.ok) {
+          setProduct(null);
+          return;
+        }
+        const data = await res.json();
+        setProduct(data);
+
+        // Fetch related products
+        if (data.category) {
+          const relatedRes = await fetch(`/api/products?category=${data.category}&limit=5`);
+          if (relatedRes.ok) {
+            const relatedData = await relatedRes.json();
+            setRelatedProducts(relatedData.filter((p: Product) => p.id !== data.id).slice(0, 4));
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching product:', error);
+        setProduct(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <p className="text-lg text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -41,10 +95,6 @@ export default function ProductDetailPage() {
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
-
-  const relatedProducts = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
-    .slice(0, 4);
 
   const handleAddToCart = () => {
     if (product.colors && product.colors.length > 0 && !selectedColor) {
