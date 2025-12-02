@@ -7,8 +7,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { useRouter } from 'next/navigation';
 
 export default function CartPage() {
+  const router = useRouter();
   const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
 
   if (cart.length === 0) {
@@ -163,7 +165,11 @@ export default function CartPage() {
               </span>
             </div>
 
-            <Button size="lg" className="w-full mb-3 gap-2">
+            <Button 
+              size="lg" 
+              className="w-full mb-3 gap-2"
+              onClick={() => router.push('/checkout')}
+            >
               Proceed to Checkout <ArrowRight className="h-4 w-4" />
             </Button>
 
