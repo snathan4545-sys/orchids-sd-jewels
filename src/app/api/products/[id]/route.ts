@@ -178,7 +178,7 @@ export async function PUT(
           { status: 400 }
         );
       }
-      updates.images = JSON.stringify(body.images);
+      updates.images = body.images;
     }
 
     if (body.colors !== undefined) {
@@ -191,7 +191,7 @@ export async function PUT(
           { status: 400 }
         );
       }
-      updates.colors = body.colors !== null ? JSON.stringify(body.colors) : null;
+      updates.colors = body.colors;
     }
 
     if (body.sizes !== undefined) {
@@ -204,7 +204,7 @@ export async function PUT(
           { status: 400 }
         );
       }
-      updates.sizes = body.sizes !== null ? JSON.stringify(body.sizes) : null;
+      updates.sizes = body.sizes;
     }
 
     if (body.inStock !== undefined) {
