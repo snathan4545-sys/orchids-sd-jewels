@@ -15,9 +15,8 @@ export default function CartPage() {
 
   const handlePlaceOrder = () => {
     // Calculate totals
-    const shipping = cartTotal >= 999 ? 0 : 50;
-    const tax = Math.round(cartTotal * 0.18);
-    const total = cartTotal + tax + shipping;
+    const shipping = 55;
+    const total = cartTotal + shipping;
 
     // Format order details for WhatsApp
     let message = `*New Order Request*\n\n`;
@@ -34,8 +33,7 @@ export default function CartPage() {
 
     message += `\n─────────────────\n`;
     message += `*Subtotal:* ₹${cartTotal}\n`;
-    message += `*Shipping:* ${shipping === 0 ? 'FREE' : `₹${shipping}`}\n`;
-    message += `*Tax (18%):* ₹${tax}\n`;
+    message += `*Shipping:* ₹${shipping}\n`;
     message += `*Total Amount:* ₹${total}\n`;
     message += `\nPlease confirm this order.`;
 
@@ -186,18 +184,7 @@ export default function CartPage() {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Shipping</span>
-                <span className="font-medium text-green-600">
-                  {cartTotal >= 999 ? 'FREE' : '₹50'}
-                </span>
-              </div>
-              {cartTotal < 999 && (
-                <p className="text-xs text-muted-foreground">
-                  Add ₹{999 - cartTotal} more for free shipping
-                </p>
-              )}
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Tax (18%)</span>
-                <span className="font-medium">₹{Math.round(cartTotal * 0.18)}</span>
+                <span className="font-medium">₹55</span>
               </div>
             </div>
 
@@ -206,7 +193,7 @@ export default function CartPage() {
             <div className="flex justify-between mb-6">
               <span className="text-lg font-bold">Total</span>
               <span className="text-lg font-bold">
-                ₹{cartTotal + Math.round(cartTotal * 0.18) + (cartTotal >= 999 ? 0 : 50)}
+                ₹{cartTotal + 55}
               </span>
             </div>
 
