@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ backgroundColor: "white" }}>
       <body className={`${playfair.variable} ${lato.variable} antialiased`}>
         <Script
           id="orchids-browser-logs"

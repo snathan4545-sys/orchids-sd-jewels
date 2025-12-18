@@ -8,11 +8,22 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
-import { ArrowLeft, ShoppingCart, Check, Heart } from 'lucide-react';
+import {
+  ArrowLeft,
+  ShoppingCart,
+  Check,
+  Heart,
+  ChevronLeft,
+  ChevronRight,
+  Maximize2,
+  Plus,
+  Minus,
+} from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import ProductCard from '@/components/ProductCard';
 import { toast } from 'sonner';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 interface Product {
   id: number;
@@ -41,6 +52,9 @@ export default function ProductDetailPage() {
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
+  const [isZoomOpen, setIsZoomOpen] = useState(false);
+  const [zoomImageIndex, setZoomImageIndex] = useState(0);
+  const [zoomScale, setZoomScale] = useState(1.2);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -112,6 +126,30 @@ export default function ProductDetailPage() {
     });
   };
 
+  const openZoom = (index: number) => {
+    setSelectedImage(index);
+    setZoomImageIndex(index);
+    setZoomScale(1.2);
+    setIsZoomOpen(true);
+  };
+
+  const handleZoomAdjust = (delta: number) => {
+    setZoomScale((prev) => {
+      const next = Math.min(3, Math.max(1, Number((prev + delta).toFixed(2))));
+      return next;
+    });
+  };
+
+  const handleZoomNavigate = (direction: 'prev' | 'next') => {
+    setZoomImageIndex((current) => {
+      const nextIndex = direction === 'prev'
+        ? (current - 1 + product.images.length) % product.images.length
+        : (current + 1) % product.images.length;
+      setSelectedImage(nextIndex);
+      return nextIndex;
+    });
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumb */}
@@ -140,12 +178,23 @@ export default function ProductDetailPage() {
         {/* Image Gallery */}
         <div>
           <Card className="overflow-hidden mb-4">
-            <div className="relative aspect-square bg-muted">
+            <div
+              className="relative aspect-square bg-muted group cursor-zoom-in"
+              role="button"
+              tabIndex={0}
+              onClick={() => openZoom(selectedImage)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  openZoom(selectedImage);
+                }
+              }}
+            >
               <Image
                 src={product.images[selectedImage]}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                 priority
               />
               {discount > 0 && (
@@ -153,6 +202,10 @@ export default function ProductDetailPage() {
                   {discount}% OFF
                 </Badge>
               )}
+              <div className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white shadow-md">
+                <Maximize2 className="h-3 w-3" />
+                Click to zoom
+              </div>
             </div>
           </Card>
           <div className="grid grid-cols-4 gap-2">
@@ -160,6 +213,7 @@ export default function ProductDetailPage() {
               <button
                 key={index}
                 onClick={() => setSelectedImage(index)}
+                onDoubleClick={() => openZoom(index)}
                 className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                   selectedImage === index ? 'border-primary' : 'border-transparent'
                 }`}
@@ -335,6 +389,103 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Image Zoom Dialog */}
+      <Dialog open={isZoomOpen} onOpenChange={(open) => {
+        setIsZoomOpen(open);
+        if (!open) setZoomScale(1.2);
+      }}>
+        <DialogContent className="max-w-5xl">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
+              <span>Use buttons or scroll to zoom</span>
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="outline"
+                  onClick={() => handleZoomAdjust(-0.25)}
+                  disabled={zoomScale <= 1}
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <span className="w-14 text-center font-medium text-foreground">{Math.round(zoomScale * 100)}%</span>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="outline"
+                  onClick={() => handleZoomAdjust(0.25)}
+                  disabled={zoomScale >= 3}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div
+              className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-muted"
+              onWheel={(e) => {
+                e.preventDefault();
+                handleZoomAdjust(e.deltaY < 0 ? 0.1 : -0.1);
+              }}
+            >
+              <Image
+                src={product.images[zoomImageIndex]}
+                alt={`${product.name} zoomed view`}
+                fill
+                className="object-contain transition-transform duration-200"
+                style={{ transform: `scale(${zoomScale})` }}
+                sizes="(min-width: 1024px) 800px, 100vw"
+              />
+            </div>
+
+            <div className="flex items-center justify-between gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleZoomNavigate('prev')}
+                disabled={product.images.length <= 1}
+                className="flex items-center gap-2"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Previous
+              </Button>
+
+              <div className="flex gap-2 overflow-x-auto">
+                {product.images.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => openZoom(index)}
+                    className={`relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border-2 transition ${
+                      zoomImageIndex === index ? 'border-primary' : 'border-transparent'
+                    }`}
+                  >
+                    <Image
+                      src={image}
+                      alt={`${product.name} preview ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleZoomNavigate('next')}
+                disabled={product.images.length <= 1}
+                className="flex items-center gap-2"
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Related Products */}
       {relatedProducts.length > 0 && (
