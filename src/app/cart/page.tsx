@@ -165,9 +165,10 @@ export default function CartPage() {
                 </div>
               </div>
             </Card>
-          ))}
+          );
+        })}
 
-          <Button
+        <Button
             variant="outline"
             className="w-full"
             onClick={clearCart}
