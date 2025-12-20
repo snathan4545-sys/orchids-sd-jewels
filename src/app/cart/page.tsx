@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useRouter } from 'next/navigation';
+import { ensureArray } from '@/lib/utils';
 
 export default function CartPage() {
   const router = useRouter();
@@ -87,18 +88,21 @@ export default function CartPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
-          {cart.map((item) => (
-            <Card key={`${item.id}-${item.selectedColor}-${item.selectedSize}`} className="p-4">
-              <div className="flex gap-4">
-                {/* Product Image */}
-                <div className="relative w-24 h-24 rounded-md overflow-hidden bg-muted shrink-0">
-                  <Image
-                    src={item.images[0]}
-                    alt={item.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+            {cart.map((item) => {
+              const images = ensureArray<string>(item.images);
+              return (
+                <Card key={`${item.id}-${item.selectedColor}-${item.selectedSize}`} className="p-4">
+                  <div className="flex gap-4">
+                    {/* Product Image */}
+                    <div className="relative w-24 h-24 rounded-md overflow-hidden bg-muted shrink-0">
+                      <Image
+                        src={images[0] || '/placeholder.png'}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
 
                 {/* Product Details */}
                 <div className="flex-1 min-w-0">

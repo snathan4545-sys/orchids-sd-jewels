@@ -24,6 +24,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import ProductCard from '@/components/ProductCard';
 import { toast } from 'sonner';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { ensureArray } from '@/lib/utils';
 
 interface Product {
   id: number;
@@ -55,6 +56,10 @@ export default function ProductDetailPage() {
   const [isZoomOpen, setIsZoomOpen] = useState(false);
   const [zoomImageIndex, setZoomImageIndex] = useState(0);
   const [zoomScale, setZoomScale] = useState(1.2);
+
+  const images = product ? ensureArray<string>(product.images) : [];
+  const colors = product ? ensureArray<string>(product.colors) : [];
+  const sizes = product ? ensureArray<string>(product.sizes) : [];
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -143,8 +148,8 @@ export default function ProductDetailPage() {
   const handleZoomNavigate = (direction: 'prev' | 'next') => {
     setZoomImageIndex((current) => {
       const nextIndex = direction === 'prev'
-        ? (current - 1 + product.images.length) % product.images.length
-        : (current + 1) % product.images.length;
+        ? (current - 1 + images.length) % images.length
+        : (current + 1) % images.length;
       setSelectedImage(nextIndex);
       return nextIndex;
     });
@@ -191,7 +196,7 @@ export default function ProductDetailPage() {
               }}
             >
               <Image
-                src={product.images[selectedImage]}
+                src={images[selectedImage] || '/placeholder.png'}
                 alt={product.name}
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
@@ -209,7 +214,7 @@ export default function ProductDetailPage() {
             </div>
           </Card>
           <div className="grid grid-cols-4 gap-2">
-            {product.images.map((image, index) => (
+            {images.map((image, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedImage(index)}
@@ -264,14 +269,14 @@ export default function ProductDetailPage() {
           </p>
 
           {/* Color Selection */}
-          {Array.isArray(product.colors) && product.colors.length > 0 && (
+          {colors.length > 0 && (
             <div className="mb-6">
               <Label className="text-base mb-3 block">
                 Color {selectedColor && `- ${selectedColor}`}
               </Label>
               <RadioGroup value={selectedColor} onValueChange={setSelectedColor}>
                 <div className="flex gap-3">
-                  {product.colors.map((color) => (
+                  {colors.map((color) => (
                     <div key={color}>
                       <RadioGroupItem
                         value={color}
@@ -292,14 +297,14 @@ export default function ProductDetailPage() {
           )}
 
           {/* Size Selection */}
-          {Array.isArray(product.sizes) && product.sizes.length > 0 && (
+          {sizes.length > 0 && (
             <div className="mb-6">
               <Label className="text-base mb-3 block">
                 Size {selectedSize && `- ${selectedSize}`}
               </Label>
               <RadioGroup value={selectedSize} onValueChange={setSelectedSize}>
                 <div className="flex gap-3">
-                  {product.sizes.map((size) => (
+                  {sizes.map((size) => (
                     <div key={size}>
                       <RadioGroupItem
                         value={size}
@@ -430,7 +435,7 @@ export default function ProductDetailPage() {
               }}
             >
               <Image
-                src={product.images[zoomImageIndex]}
+                src={images[zoomImageIndex] || '/placeholder.png'}
                 alt={`${product.name} zoomed view`}
                 fill
                 className="object-contain transition-transform duration-200"
@@ -445,7 +450,7 @@ export default function ProductDetailPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => handleZoomNavigate('prev')}
-                disabled={product.images.length <= 1}
+                disabled={images.length <= 1}
                 className="flex items-center gap-2"
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -453,7 +458,7 @@ export default function ProductDetailPage() {
               </Button>
 
               <div className="flex gap-2 overflow-x-auto">
-                {product.images.map((image, index) => (
+                {images.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => openZoom(index)}
@@ -476,7 +481,7 @@ export default function ProductDetailPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => handleZoomNavigate('next')}
-                disabled={product.images.length <= 1}
+                disabled={images.length <= 1}
                 className="flex items-center gap-2"
               >
                 Next

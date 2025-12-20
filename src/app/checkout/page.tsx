@@ -12,6 +12,7 @@ import { ShoppingBag, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'sonner';
+import { ensureArray } from '@/lib/utils';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -235,31 +236,34 @@ export default function CheckoutPage() {
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
             <div className="space-y-4 mb-6">
-              {cart.map((item) => (
-                <div key={`${item.id}-${item.selectedColor}-${item.selectedSize}`} className="flex gap-3">
-                  <div className="relative w-16 h-16 rounded-md overflow-hidden bg-muted shrink-0">
-                    <Image
-                      src={item.images[0]}
-                      alt={item.name}
-                      fill
-                      className="object-cover"
-                    />
+              {cart.map((item) => {
+                const images = ensureArray<string>(item.images);
+                return (
+                  <div key={`${item.id}-${item.selectedColor}-${item.selectedSize}`} className="flex gap-3">
+                    <div className="relative w-16 h-16 rounded-md overflow-hidden bg-muted shrink-0">
+                      <Image
+                        src={images[0] || '/placeholder.png'}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium line-clamp-1">{item.name}</p>
+                      <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
+                      {item.selectedColor && (
+                        <p className="text-xs text-muted-foreground">Color: {item.selectedColor}</p>
+                      )}
+                      {item.selectedSize && (
+                        <p className="text-xs text-muted-foreground">Size: {item.selectedSize}</p>
+                      )}
+                    </div>
+                    <div className="text-sm font-medium">
+                      ₹{item.price * item.quantity}
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium line-clamp-1">{item.name}</p>
-                    <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
-                    {item.selectedColor && (
-                      <p className="text-xs text-muted-foreground">Color: {item.selectedColor}</p>
-                    )}
-                    {item.selectedSize && (
-                      <p className="text-xs text-muted-foreground">Size: {item.selectedSize}</p>
-                    )}
-                  </div>
-                  <div className="text-sm font-medium">
-                    ₹{item.price * item.quantity}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <Separator className="my-4" />

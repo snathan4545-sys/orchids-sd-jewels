@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { ShoppingCart, Eye } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Badge } from '@/components/ui/badge';
+import { ensureArray } from '@/lib/utils';
 
 interface ProductCardProps {
   product: Product;
@@ -15,6 +16,9 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+
+  const images = ensureArray<string>(product.images);
+  const colors = ensureArray<string>(product.colors);
 
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -31,7 +35,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <CardContent className="p-0 relative">
           <div className="relative aspect-square overflow-hidden bg-muted">
             <Image
-              src={product.images[0]}
+              src={images[0] || '/placeholder.png'}
               alt={product.name}
               fill
               className="object-cover group-hover:scale-110 transition-transform duration-300"
@@ -68,9 +72,9 @@ export default function ProductCard({ product }: ProductCardProps) {
               </span>
             )}
           </div>
-            {Array.isArray(product.colors) && product.colors.length > 0 && (
+            {colors.length > 0 && (
               <div className="flex gap-1">
-                {product.colors.slice(0, 3).map((color) => (
+                {colors.slice(0, 3).map((color) => (
                 <div
                   key={color}
                   className="w-4 h-4 rounded-full border border-border"
