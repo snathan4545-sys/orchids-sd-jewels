@@ -68,9 +68,9 @@ export default function ProductCard({ product }: ProductCardProps) {
               </span>
             )}
           </div>
-          {product.colors && product.colors.length > 0 && (
-            <div className="flex gap-1">
-              {product.colors.slice(0, 3).map((color) => (
+            {Array.isArray(product.colors) && product.colors.length > 0 && (
+              <div className="flex gap-1">
+                {product.colors.slice(0, 3).map((color) => (
                 <div
                   key={color}
                   className="w-4 h-4 rounded-full border border-border"
