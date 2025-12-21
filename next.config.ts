@@ -16,17 +16,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  turbopack: {
-    rules: {
-      "*.{jsx,tsx}": {
-        loaders: [LOADER]
-      }
-    }
-  }
-};
+    typescript: {
+      ignoreBuildErrors: true,
+    },
+  };
 
 export default nextConfig;
 // Orchids restart: 1763577052938
