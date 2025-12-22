@@ -264,7 +264,7 @@ export default function ProductDetailPage() {
           </p>
 
           {/* Color Selection */}
-          {product.colors && product.colors.length > 0 && (
+          {Array.isArray(product.colors) && product.colors.length > 0 && (
             <div className="mb-6">
               <Label className="text-base mb-3 block">
                 Color {selectedColor && `- ${selectedColor}`}
@@ -292,7 +292,7 @@ export default function ProductDetailPage() {
           )}
 
           {/* Size Selection */}
-          {product.sizes && product.sizes.length > 0 && (
+          {Array.isArray(product.sizes) && product.sizes.length > 0 && (
             <div className="mb-6">
               <Label className="text-base mb-3 block">
                 Size {selectedSize && `- ${selectedSize}`}
