@@ -14,25 +14,51 @@ const client = createClient({
 const db = drizzle(client);
 
 async function removeProducts() {
-  console.log('Fetching necklaces to remove...');
-  const productsToRemove = await db.select().from(products).where(
-    and(
-      eq(products.category, 'necklaces'),
-      or(
-        like(products.name, '%Ruby Stone%'),
-        like(products.name, '%Antique Temple%')
-      )
-    )
+  console.log('Fetching all necklaces...');
+  const allNecklaces = await db.select().from(products).where(
+    eq(products.category, 'necklaces')
   );
   
-  console.log(`Found ${productsToRemove.length} products to remove:`);
-  productsToRemove.forEach(p => {
-    console.log(`  - ${p.name} (${p.category})`);
+  console.log(`\nFound ${allNecklaces.length} total necklaces:`);
+  allNecklaces.forEach(p => {
+    console.log(`  - ${p.name} (ID: ${p.id})`);
   });
   
-  if (productsToRemove.length > 0) {
+  // Find duplicates and "Amritha Lakshmi Necklace set"
+  const nameCounts = {};
+  allNecklaces.forEach(p => {
+    const name = p.name.toLowerCase().trim();
+    if (!nameCounts[name]) {
+      nameCounts[name] = [];
+    }
+    nameCounts[name].push(p);
+  });
+  
+  const toRemove = [];
+  
+  // Find "Amritha Lakshmi Necklace set"
+  Object.entries(nameCounts).forEach(([name, items]) => {
+    if (name.includes('amritha lakshmi')) {
+      toRemove.push(...items);
+    }
+  });
+  
+  // Find duplicates (keep first, remove rest)
+  Object.entries(nameCounts).forEach(([name, items]) => {
+    if (items.length > 1 && !name.includes('amritha lakshmi')) {
+      console.log(`\nDuplicate found: "${items[0].name}" (${items.length} copies)`);
+      toRemove.push(...items.slice(1)); // Keep first, remove rest
+    }
+  });
+  
+  console.log(`\n\nProducts to remove (${toRemove.length}):`);
+  toRemove.forEach(p => {
+    console.log(`  - ${p.name} (ID: ${p.id})`);
+  });
+  
+  if (toRemove.length > 0) {
     console.log('\nRemoving products...');
-    const idsToRemove = productsToRemove.map(p => p.id);
+    const idsToRemove = toRemove.map(p => p.id);
     await db.delete(products).where(
       inArray(products.id, idsToRemove)
     );
