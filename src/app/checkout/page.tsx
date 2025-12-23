@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { ensureArray } from '@/lib/utils';
+import { ReturnPolicyDialog } from '@/components/ReturnPolicyDialog';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [showReturnPolicy, setShowReturnPolicy] = useState(false);
   
   const [formData, setFormData] = useState({
     customerName: '',
@@ -27,6 +29,12 @@ export default function CheckoutPage() {
     email: '',
     address: '',
   });
+
+  useEffect(() => {
+    if (cart.length > 0 && !orderPlaced) {
+      setShowReturnPolicy(true);
+    }
+  }, []);
 
   const tax = Math.round(cartTotal * 0.18);
   const shipping = cartTotal >= 999 ? 0 : 50;
@@ -139,18 +147,21 @@ export default function CheckoutPage() {
     );
   }
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <Button
-        variant="ghost"
-        className="mb-6"
-        onClick={() => router.back()}
-      >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        Back to Cart
-      </Button>
+    return (
+      <>
+        <ReturnPolicyDialog open={showReturnPolicy} onOpenChange={setShowReturnPolicy} />
+        
+        <div className="container mx-auto px-4 py-8">
+          <Button
+            variant="ghost"
+            className="mb-6"
+            onClick={() => router.back()}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Cart
+          </Button>
 
-      <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+          <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Checkout Form */}
@@ -313,8 +324,10 @@ export default function CheckoutPage() {
               </div>
             </div>
           </Card>
+          </div>
         </div>
-      </div>
-    </div>
-  );
+        </div>
+      </>
+    );
+  }
 }
