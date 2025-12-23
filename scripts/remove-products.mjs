@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
 import { products } from '../src/db/schema.js';
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray, like, or, and } from 'drizzle-orm';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -14,11 +14,15 @@ const client = createClient({
 const db = drizzle(client);
 
 async function removeProducts() {
-  const categoriesToRemove = ['earrings', 'bracelets', 'rings', 'impon', 'guarantee-chains'];
-  
-  console.log('Fetching products to remove...');
+  console.log('Fetching necklaces to remove...');
   const productsToRemove = await db.select().from(products).where(
-    inArray(products.category, categoriesToRemove)
+    and(
+      eq(products.category, 'necklaces'),
+      or(
+        like(products.name, '%Ruby Stone%'),
+        like(products.name, '%Antique Temple%')
+      )
+    )
   );
   
   console.log(`Found ${productsToRemove.length} products to remove:`);
@@ -28,8 +32,9 @@ async function removeProducts() {
   
   if (productsToRemove.length > 0) {
     console.log('\nRemoving products...');
+    const idsToRemove = productsToRemove.map(p => p.id);
     await db.delete(products).where(
-      inArray(products.category, categoriesToRemove)
+      inArray(products.id, idsToRemove)
     );
     console.log('✅ Products removed successfully!');
   } else {
