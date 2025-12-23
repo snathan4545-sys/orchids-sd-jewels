@@ -13,64 +13,48 @@ const client = createClient({
 
 const db = drizzle(client);
 
-async function removeProducts() {
+async function removeColors() {
   console.log('Fetching all necklaces...');
   const allNecklaces = await db.select().from(products).where(
     eq(products.category, 'necklaces')
   );
   
-  console.log(`\nFound ${allNecklaces.length} total necklaces:`);
-  allNecklaces.forEach(p => {
+  // Product names to remove colors from
+  const targetNames = [
+    'krishna pearl',
+    'kasumalai',
+    'swirl necklace',
+    'crimson pearl heritage',
+    'lakshmi pearl ball',
+    'peacock pearl',
+    'ivory loop',
+    'radhakrishna pearl'
+  ];
+  
+  const matchedProducts = allNecklaces.filter(p => 
+    targetNames.some(name => p.name.toLowerCase().includes(name))
+  );
+  
+  console.log(`\nFound ${matchedProducts.length} products to remove colors from:`);
+  matchedProducts.forEach(p => {
     console.log(`  - ${p.name} (ID: ${p.id})`);
+    console.log(`    Current colors: ${p.colors}`);
   });
   
-  // Find duplicates and "Amritha Lakshmi Necklace set"
-  const nameCounts = {};
-  allNecklaces.forEach(p => {
-    const name = p.name.toLowerCase().trim();
-    if (!nameCounts[name]) {
-      nameCounts[name] = [];
+  if (matchedProducts.length > 0) {
+    console.log('\nRemoving colors...');
+    for (const product of matchedProducts) {
+      await db.update(products).set({ colors: '[]' }).where(eq(products.id, product.id));
     }
-    nameCounts[name].push(p);
-  });
-  
-  const toRemove = [];
-  
-  // Find "Amritha Lakshmi Necklace set"
-  Object.entries(nameCounts).forEach(([name, items]) => {
-    if (name.includes('amritha lakshmi')) {
-      toRemove.push(...items);
-    }
-  });
-  
-  // Find duplicates (keep first, remove rest)
-  Object.entries(nameCounts).forEach(([name, items]) => {
-    if (items.length > 1 && !name.includes('amritha lakshmi')) {
-      console.log(`\nDuplicate found: "${items[0].name}" (${items.length} copies)`);
-      toRemove.push(...items.slice(1)); // Keep first, remove rest
-    }
-  });
-  
-  console.log(`\n\nProducts to remove (${toRemove.length}):`);
-  toRemove.forEach(p => {
-    console.log(`  - ${p.name} (ID: ${p.id})`);
-  });
-  
-  if (toRemove.length > 0) {
-    console.log('\nRemoving products...');
-    const idsToRemove = toRemove.map(p => p.id);
-    await db.delete(products).where(
-      inArray(products.id, idsToRemove)
-    );
-    console.log('✅ Products removed successfully!');
+    console.log(`✅ Removed colors from ${matchedProducts.length} products!`);
   } else {
-    console.log('No products found to remove.');
+    console.log('No matching products found.');
   }
   
   process.exit(0);
 }
 
-removeProducts().catch((error) => {
-  console.error('Error removing products:', error);
+removeColors().catch((error) => {
+  console.error('Error removing colors:', error);
   process.exit(1);
 });
