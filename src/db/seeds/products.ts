@@ -95,43 +95,6 @@ async function main() {
             updatedAt: new Date().toISOString(),
         },
         
-        // Necklaces (2 products)
-        {
-            name: 'Ruby Stone Necklace Set',
-            description: 'Beautiful necklace set featuring ruby-colored imitation stones with gold-plated finish. Includes matching earrings. Perfect for weddings and festive celebrations with traditional and contemporary attire.',
-            price: 1899,
-            originalPrice: 2499,
-            category: 'necklaces',
-            images: [
-                'https://images.unsplash.com/photo-1589674781759-c791c6a4f32a-jewelry',
-                '/images/products/ruby-stone-necklace-set.jpg'
-            ],
-            colors: ['Gold', 'Antique Gold'],
-            sizes: ['16 inches', '18 inches', 'Adjustable'],
-            inStock: true,
-            featured: false,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        },
-        {
-            name: 'Antique Temple Necklace',
-            description: 'Traditional temple jewelry necklace with antique gold finish and Lakshmi pendant design. Crafted with intricate detailing and oxidized silver accents. Ideal for religious ceremonies and cultural functions.',
-            price: 2299,
-            originalPrice: null,
-            category: 'necklaces',
-            images: [
-                'https://images.unsplash.com/photo-1603561591411-07134e71a2a9-jewelry',
-                '/images/products/antique-temple-necklace.jpg',
-                'https://images.unsplash.com/photo-1611591437281-460bfbe1220a-jewelry'
-            ],
-            colors: ['Antique Gold', 'Silver'],
-            sizes: ['18 inches', 'Adjustable'],
-            inStock: true,
-            featured: false,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        },
-        
         // Earrings (1 product)
         {
             name: 'Golden Jhumka Earrings',
@@ -154,7 +117,7 @@ async function main() {
 
     await db.insert(products).values(newProducts);
     
-    console.log('✅ Products seeder completed successfully - Added 8 new imitation jewelry products');
+    console.log('✅ Products seeder completed successfully - Added 6 new imitation jewelry products');
 }
 
 main().catch((error) => {
