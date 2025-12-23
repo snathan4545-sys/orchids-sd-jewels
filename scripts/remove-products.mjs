@@ -21,14 +21,24 @@ async function removeColors() {
   
   // Product names to remove colors from
   const targetNames = [
-    'krishna pearl',
-    'kasumalai',
-    'swirl necklace',
-    'crimson pearl heritage',
-    'lakshmi pearl ball',
-    'peacock pearl',
-    'ivory loop',
-    'radhakrishna pearl'
+    'golden daisy line',
+    'green leaf bash',
+    'grape necklace',
+    'binge necklace',
+    'single stone fred',
+    'leaf stone',
+    'basket necklace',
+    'snowflake necklace',
+    'floral white stone drop',
+    'stone droplet',
+    'lakshmi dollor round pearl',
+    'lakshmi dollar round pearl',
+    'multi stone',
+    'twinkle star',
+    'square gold look',
+    'elephant necklace large',
+    'elephant necklace small',
+    'elephant pearl'
   ];
   
   const matchedProducts = allNecklaces.filter(p => 
