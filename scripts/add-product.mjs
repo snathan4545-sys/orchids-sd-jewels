@@ -13,13 +13,13 @@ async function addProduct() {
   try {
       const now = new Date().toISOString();
       const result = await db.insert(products).values({
-        name: 'Arrowside Golden Kadas Bracelet',
-        description: 'Arrowside Golden Kadas Bracelet - Elegant gold-toned bracelet with arrow design',
+        name: 'Butterfly Golden Kadas Bracelet',
+        description: 'Butterfly Golden Kadas Bracelet - Elegant gold-toned bracelet with butterfly design',
         price: 299,
         originalPrice: 450,
         category: 'bracelets',
         images: [
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.06-1766600920516.jpeg?width=8000&height=8000&resize=contain'
+          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.04-1766601038057.jpeg?width=8000&height=8000&resize=contain'
         ],
         colors: ['Gold'],
         sizes: [],
