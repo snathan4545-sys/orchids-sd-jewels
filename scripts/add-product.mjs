@@ -13,21 +13,16 @@ async function addProduct() {
   try {
       const now = new Date().toISOString();
       const result = await db.insert(products).values({
-        name: 'Premium Spring loves designed Bracelet Set',
-        description: 'Premium Spring loves designed Bracelet Set',
+        name: 'LV Golden Kadas Bracelet',
+        description: 'LV Golden Kadas Bracelet - Elegant gold-toned bracelet',
         price: 249,
         originalPrice: 450,
         category: 'bracelets',
         images: [
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.11-1-1766599770599.jpeg?width=8000&height=8000&resize=contain',
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.11-2-1766599770705.jpeg?width=8000&height=8000&resize=contain',
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.11-1766599770711.jpeg?width=8000&height=8000&resize=contain',
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.12-1-1766599771063.jpeg?width=8000&height=8000&resize=contain',
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.12-2-1766599770600.jpeg?width=8000&height=8000&resize=contain',
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.12-1766599770699.jpeg?width=8000&height=8000&resize=contain',
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.13-1766599770710.jpeg?width=8000&height=8000&resize=contain'
+          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.06-1-1766600406744.jpeg?width=8000&height=8000&resize=contain',
+          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.07-1766600406742.jpeg?width=8000&height=8000&resize=contain'
         ],
-        colors: ['Multicolor'],
+        colors: ['Gold'],
         sizes: [],
         inStock: true,
         featured: false,
