@@ -11,18 +11,19 @@ const db = drizzle(client);
 
 async function addProduct() {
   try {
-    const now = new Date().toISOString();
+      const now = new Date().toISOString();
       const result = await db.insert(products).values({
-        name: 'Basket Necklace',
-        description: 'Elegant gold-tone necklace with round embossed motifs and sparkling stone clusters, paired with matching earrings for a refined set.',
-        price: 649,
-        originalPrice: 899,
+        name: 'Red Flower Necklace',
+        description: 'Red Flower Necklace',
+        price: 449,
+        originalPrice: 659,
         category: 'necklaces',
         images: [
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-17-at-01.52.55_82352d60-1765918338145.jpg?width=8000&height=8000&resize=contain',
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-17-at-01.52.55_b179832d-1765918338207.jpg?width=8000&height=8000&resize=contain'
+          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-18-at-15.44.03-1766595217188.jpeg?width=8000&height=8000&resize=contain',
+          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-18-at-15.44.02-1-1766595217301.jpeg?width=8000&height=8000&resize=contain',
         ],
-        colors: ['Gold'],
+        colors: [],
+        sizes: [],
         inStock: true,
         featured: false,
         createdAt: now,
