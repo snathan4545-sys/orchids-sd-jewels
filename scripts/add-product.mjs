@@ -13,14 +13,14 @@ async function addProduct() {
   try {
       const now = new Date().toISOString();
       const result = await db.insert(products).values({
-        name: 'Red Flower Necklace',
-        description: 'Red Flower Necklace',
-        price: 449,
+        name: 'Leaf Infinity Design Necklace',
+        description: 'Leaf Infinity Design Necklace',
+        price: 499,
         originalPrice: 659,
         category: 'necklaces',
         images: [
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-18-at-15.44.03-1766595217188.jpeg?width=8000&height=8000&resize=contain',
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-18-at-15.44.02-1-1766595217301.jpeg?width=8000&height=8000&resize=contain',
+          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-18-at-15.44.03-1-1766595955769.jpeg?width=8000&height=8000&resize=contain',
+          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-18-at-15.44.03-2-1766595955770.jpeg?width=8000&height=8000&resize=contain',
         ],
         colors: [],
         sizes: [],
@@ -40,4 +40,3 @@ async function addProduct() {
 }
 
 addProduct();
-
