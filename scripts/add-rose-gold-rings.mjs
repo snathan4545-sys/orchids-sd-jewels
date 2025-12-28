@@ -15,83 +15,83 @@ const enhance = (url) => {
 
 const rings = [
   {
-    name: 'Wave Heart Crown Adjustable Ring (Rose Gold)',
+    name: 'Floral Filigree Adjustable Ring (Rose Gold)',
     description:
-      'Rose gold-toned adjustable ring with a wave-style crown design adorned with heart motifs and sparkling crystal accents.',
+      'Rose gold adjustable ring featuring delicate floral filigree design with crystal embellishments along split band.',
     image: enhance(
-      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/4-1766952799331.jpeg'
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/123-1766952963042.jpeg'
     ),
   },
   {
-    name: 'Leaf Cluster Flower Adjustable Ring (Rose Gold)',
+    name: 'Sunburst Crystal Panel Adjustable Ring (Rose Gold)',
     description:
-      'Rose gold-toned adjustable ring featuring a clustered flower centerpiece with intricate leaf detailing and crystal embellishments.',
+      'Rose gold adjustable ring with sunburst centerpiece and crystal-studded panel design.',
     image: enhance(
-      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/5-1766952799442.jpeg'
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/234-1766952963044.jpeg'
     ),
   },
   {
-    name: 'Geometric Crystal Panel Adjustable Ring (Rose Gold)',
+    name: 'Heart Flower Cluster Adjustable Ring (Rose Gold)',
     description:
-      'Rose gold-toned adjustable ring with a geometric rectangular panel filled with sparkling crystals for a modern, structured look.',
+      'Rose gold adjustable ring with heart-shaped flower cluster center and crystal accents.',
     image: enhance(
-      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/12-1766952799418.jpeg'
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/458-1766952963048.jpeg'
     ),
   },
   {
-    name: 'Interlaced Curve Crystal Adjustable Ring (Rose Gold)',
+    name: 'Infinity Loop Crystal Adjustable Ring (Rose Gold)',
     description:
-      'Rose gold-toned adjustable ring with interlaced curved bands and a row of sparkling crystals for an elegant, flowing design.',
+      'Rose gold adjustable ring featuring infinity loop design with crystal detailing.',
     image: enhance(
-      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/22-1766952799428.jpeg'
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/467-1766952963349.jpeg'
     ),
   },
   {
-    name: 'Flower Cluster Halo Adjustable Ring (Rose Gold)',
+    name: 'Crown Tiara Crystal Adjustable Ring (Rose Gold)',
     description:
-      'Rose gold-toned adjustable ring with a delicate flower cluster centerpiece surrounded by a halo of crystals.',
+      'Rose gold adjustable ring with elegant crown tiara design adorned with double-row crystals.',
     image: enhance(
-      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/23-1766952799416.jpeg'
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/3553-1766952963339.jpeg'
     ),
   },
   {
-    name: 'Braided Wave Crystal Adjustable Ring (Rose Gold)',
+    name: 'Scalloped Wave Crystal Adjustable Ring (Rose Gold)',
     description:
-      'Rose gold-toned adjustable ring featuring a braided wave pattern with sparkling crystal embellishments.',
+      'Rose gold adjustable ring featuring scalloped wave pattern with alternating crystal stones.',
     image: enhance(
-      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/33-1766952799453.jpeg'
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/g-1766952963052.jpeg'
     ),
   },
   {
-    name: 'Cluster Wave Crystal Adjustable Ring (Rose Gold)',
+    name: 'Geometric Prong Crystal Adjustable Ring (Rose Gold)',
     description:
-      'Rose gold-toned adjustable ring with a wave-inspired design featuring a cluster of crystals for added sparkle.',
+      'Rose gold adjustable ring with geometric prong-set center crystal and pavé side details.',
     image: enhance(
-      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/44-1766952799417.jpeg'
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-29-at-1.15.05-AM-1766952963588.jpeg'
     ),
   },
   {
-    name: 'Heart Arrow Crystal Adjustable Ring (Rose Gold)',
+    name: 'Wave Heart Infinity Adjustable Ring (Rose Gold)',
     description:
-      'Rose gold-toned adjustable ring with a heart-shaped crystal centerpiece and arrow-inspired detailing.',
+      'Rose gold adjustable ring with flowing wave and heart infinity motif accented with crystals.',
     image: enhance(
-      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/76-1766952799619.jpeg'
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-29-at-1.15.11-AM-1766952963330.jpeg'
     ),
   },
   {
-    name: 'Sparkle Branch Leaf Adjustable Ring (Rose Gold)',
+    name: 'Clover Bow Crystal Adjustable Ring (Rose Gold)',
     description:
-      'Rose gold-toned adjustable ring with delicate branch and leaf motifs adorned with crystal sparkle.',
+      'Rose gold adjustable ring featuring clover-inspired bow centerpiece with crystal detailing.',
     image: enhance(
-      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/78-1766952799433.jpeg'
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-29-at-1.15.12-AM-1766952963077.jpeg'
     ),
   },
   {
-    name: 'Crossover Crystal Band Adjustable Ring (Rose Gold)',
+    name: 'Ribbon Knot Crystal Adjustable Ring (Rose Gold)',
     description:
-      'Rose gold-toned adjustable ring with a crossover band design featuring two rows of sparkling crystals.',
+      'Rose gold adjustable ring with ribbon knot design and triple-row crystal embellishments.',
     image: enhance(
-      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/90-1766952799425.jpeg'
+      'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-202667-1766952963062.jpeg'
     ),
   },
 ];
@@ -121,7 +121,7 @@ async function addRings() {
       console.log(`✓ Added ${ring.name}`);
     }
 
-    console.log(`\n✓ Successfully added ${rings.length} rose gold adjustable rings to the rings category`);
+    console.log(`\n✓ Successfully added ${rings.length} rose gold rings to the rings category`);
   } catch (error) {
     console.error('Error:', error);
   } finally {
