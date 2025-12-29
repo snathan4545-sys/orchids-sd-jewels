@@ -10,7 +10,7 @@ export const products = sqliteTable('products', {
   images: text('images', { mode: 'json' }).notNull(),
   colors: text('colors', { mode: 'json' }),
   sizes: text('sizes', { mode: 'json' }),
-  inStock: integer('in_stock', { mode: 'boolean' }).notNull().default(true),
+  inStock: integer('in_stock').notNull().default(3),
   featured: integer('featured', { mode: 'boolean' }).notNull().default(false),
   createdAt: text('created_at').notNull(),
   updatedAt: text('updated_at').notNull(),

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendOrderNotification } from '@/lib/whatsapp-notifier';
+import { db } from '@/db';
+import { products } from '@/db/schema';
+import { eq, sql } from 'drizzle-orm';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,6 +28,23 @@ export async function POST(request: NextRequest) {
     const tax = Math.round(total * 0.18);
     const shipping = total >= 999 ? 0 : 50;
     const grandTotal = total + tax + shipping;
+
+    // Update product quantities
+    try {
+      for (const item of orderData.items) {
+        await db.update(products)
+          .set({
+            inStock: sql`${products.inStock} - ${item.quantity}`
+          })
+          .where(eq(products.id, item.id));
+      }
+    } catch (dbError) {
+      console.error('Failed to update product quantities:', dbError);
+      return NextResponse.json(
+        { error: 'Failed to update inventory' },
+        { status: 500 }
+      );
+    }
 
       // Send WhatsApp notification to business number
       try {
