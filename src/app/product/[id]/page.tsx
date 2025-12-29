@@ -116,12 +116,8 @@ export default function ProductDetailPage() {
     : 0;
 
   const handleAddToCart = () => {
-    if (product.colors && product.colors.length > 0 && !selectedColor) {
+    if (colors.length > 0 && !selectedColor) {
       toast.error('Please select a color');
-      return;
-    }
-    if (product.sizes && product.sizes.length > 0 && !selectedSize) {
-      toast.error('Please select a size');
       return;
     }
 
@@ -296,33 +292,7 @@ export default function ProductDetailPage() {
             </div>
           )}
 
-          {/* Size Selection */}
-          {sizes.length > 0 && (
-            <div className="mb-6">
-              <Label className="text-base mb-3 block">
-                Size {selectedSize && `- ${selectedSize}`}
-              </Label>
-              <RadioGroup value={selectedSize} onValueChange={setSelectedSize}>
-                <div className="flex gap-3">
-                  {sizes.map((size) => (
-                    <div key={size}>
-                      <RadioGroupItem
-                        value={size}
-                        id={`size-${size}`}
-                        className="peer sr-only"
-                      />
-                      <Label
-                        htmlFor={`size-${size}`}
-                        className="flex items-center justify-center px-4 py-2 rounded-md border-2 border-muted cursor-pointer transition-all peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/10 hover:border-primary/50"
-                      >
-                        {size}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </RadioGroup>
-            </div>
-          )}
+
 
           {/* Quantity */}
           <div className="mb-6">
