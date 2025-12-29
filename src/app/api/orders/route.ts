@@ -26,22 +26,22 @@ export async function POST(request: NextRequest) {
     const shipping = total >= 999 ? 0 : 50;
     const grandTotal = total + tax + shipping;
 
-    // Send WhatsApp notification to business number
-    try {
-      await sendOrderNotification(
-        '+919894464215', // Your WhatsApp number
-        {
-          orderId,
-          customerName: orderData.customerName,
-          customerPhone: orderData.customerPhone,
-          totalPrice: grandTotal,
-          items: orderData.items,
-        }
-      );
-    } catch (whatsappError) {
-      console.error('WhatsApp notification failed (non-blocking):', whatsappError);
-      // Don't fail the order if WhatsApp fails
-    }
+      // Send WhatsApp notification to business number
+      try {
+        await sendOrderNotification(
+          '+919363475021', // Your WhatsApp number
+          {
+            orderId,
+            customerName: orderData.customerName,
+            customerPhone: orderData.customerPhone,
+            totalPrice: grandTotal,
+            items: orderData.items,
+          }
+        );
+      } catch (whatsappError) {
+        console.error('WhatsApp notification failed (non-blocking):', whatsappError);
+        // Don't fail the order if WhatsApp fails
+      }
 
     return NextResponse.json({
       success: true,

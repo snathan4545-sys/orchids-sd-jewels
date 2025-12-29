@@ -41,8 +41,8 @@ export default function CartPage() {
     // Encode message for URL
     const encodedMessage = encodeURIComponent(message);
     
-    // WhatsApp number (India country code + number)
-    const whatsappNumber = '919894464215';
+      // WhatsApp number (India country code + number)
+      const whatsappNumber = '919363475021';
     
     // Create WhatsApp URL
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
