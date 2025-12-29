@@ -24,14 +24,31 @@ export async function GET(request: NextRequest) {
         .where(eq(products.id, parseInt(id)))
         .limit(1);
 
-      if (product.length === 0) {
-        return NextResponse.json({ 
-          error: 'Product not found',
-          code: 'PRODUCT_NOT_FOUND' 
-        }, { status: 404 });
-      }
+        if (product.length === 0) {
+          return NextResponse.json({ 
+            error: 'Product not found',
+            code: 'PRODUCT_NOT_FOUND' 
+          }, { status: 404 });
+        }
 
-      return NextResponse.json(product[0], { status: 200 });
+        // Parse colors and sizes if they are strings
+        const productData = product[0];
+        if (typeof productData.colors === 'string') {
+          try {
+            productData.colors = JSON.parse(productData.colors);
+          } catch {
+            productData.colors = null;
+          }
+        }
+        if (typeof productData.sizes === 'string') {
+          try {
+            productData.sizes = JSON.parse(productData.sizes);
+          } catch {
+            productData.sizes = null;
+          }
+        }
+
+        return NextResponse.json(productData, { status: 200 });
     }
 
     // List with filtering
@@ -85,9 +102,29 @@ export async function GET(request: NextRequest) {
       query = query.where(and(...conditions));
     }
 
-    const results = await query.limit(limit).offset(offset);
+      const results = await query.limit(limit).offset(offset);
 
-    return NextResponse.json(results, { status: 200 });
+      // Parse colors and sizes for all products
+      const parsedResults = results.map(product => {
+        const productData = { ...product };
+        if (typeof productData.colors === 'string') {
+          try {
+            productData.colors = JSON.parse(productData.colors);
+          } catch {
+            productData.colors = null;
+          }
+        }
+        if (typeof productData.sizes === 'string') {
+          try {
+            productData.sizes = JSON.parse(productData.sizes);
+          } catch {
+            productData.sizes = null;
+          }
+        }
+        return productData;
+      });
+
+      return NextResponse.json(parsedResults, { status: 200 });
   } catch (error) {
     console.error('GET error:', error);
     return NextResponse.json({ 
