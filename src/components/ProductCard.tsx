@@ -26,7 +26,9 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
-    addToCart(product);
+    if (product.inStock) {
+      addToCart(product);
+    }
   };
 
   return (
@@ -38,26 +40,35 @@ export default function ProductCard({ product }: ProductCardProps) {
               src={images[0] || '/placeholder.png'}
               alt={product.name}
               fill
-              className="object-cover group-hover:scale-110 transition-transform duration-300"
+              className={`object-cover group-hover:scale-110 transition-transform duration-300 ${!product.inStock ? 'opacity-50' : ''}`}
             />
-            {discount > 0 && (
+            {!product.inStock && (
+              <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                <Badge className="bg-destructive text-white text-lg px-4 py-2">
+                  OUT OF STOCK
+                </Badge>
+              </div>
+            )}
+            {discount > 0 && product.inStock && (
               <Badge className="absolute top-2 left-2 bg-destructive">
                 {discount}% OFF
               </Badge>
             )}
-            {product.featured && (
+            {product.featured && product.inStock && (
               <Badge className="absolute top-2 right-2 bg-primary">
                 Featured
               </Badge>
             )}
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
-              <Button size="icon" variant="secondary" onClick={handleQuickAdd}>
-                <ShoppingCart className="h-4 w-4" />
-              </Button>
-              <Button size="icon" variant="secondary">
-                <Eye className="h-4 w-4" />
-              </Button>
-            </div>
+            {product.inStock && (
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
+                <Button size="icon" variant="secondary" onClick={handleQuickAdd}>
+                  <ShoppingCart className="h-4 w-4" />
+                </Button>
+                <Button size="icon" variant="secondary">
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
         <CardFooter className="flex flex-col items-start p-4 gap-2">

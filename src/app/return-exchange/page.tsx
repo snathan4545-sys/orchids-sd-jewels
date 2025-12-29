@@ -251,13 +251,13 @@ export default function ReturnExchangePage() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <Phone className="h-5 w-5 text-primary mt-0.5 shrink-0" />
-                  <div>
-                    <p className="font-semibold mb-1">Support Contact</p>
-                    <p className="text-muted-foreground">9894464215</p>
+                  <div className="flex items-start gap-3">
+                    <Phone className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                    <div>
+                      <p className="font-semibold mb-1">Support Contact</p>
+                      <p className="text-muted-foreground">9363475021</p>
+                    </div>
                   </div>
-                </div>
 
                 <div className="flex items-start gap-3">
                   <Clock className="h-5 w-5 text-primary mt-0.5 shrink-0" />

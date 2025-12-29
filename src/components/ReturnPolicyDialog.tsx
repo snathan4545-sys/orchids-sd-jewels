@@ -119,7 +119,7 @@ export function ReturnPolicyDialog({ open, onOpenChange }: ReturnPolicyDialogPro
               <h3 className="font-semibold text-base mb-2">Contact Information</h3>
               <div className="space-y-1 text-muted-foreground">
                 <p><strong>Address:</strong> SD-Jewels, 89th Thandupathai Street, Annasagaram, Dharmapuri, Tamil Nadu – 636704</p>
-                <p><strong>Support Contact:</strong> 9894464215</p>
+                  <p><strong>Support Contact:</strong> 9363475021</p>
                 <p><strong>Support Hours:</strong> Monday to Friday, 9:00 AM to 7:00 PM</p>
               </div>
             </div>

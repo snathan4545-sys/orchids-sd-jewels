@@ -92,10 +92,10 @@ export default function Footer() {
                     89th Thandupathai Street, Annasagaram, Dharmapuri, Tamil Nadu – 636704
                   </span>
                 </li>
-                <li className="flex items-center space-x-2">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">9894464215</span>
-                </li>
+                  <li className="flex items-center space-x-2">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">9363475021</span>
+                  </li>
             </ul>
           </div>
         </div>
