@@ -323,11 +323,10 @@ export default function CheckoutPage() {
                 <span>100% secure checkout</span>
               </div>
             </div>
-          </Card>
+            </Card>
           </div>
         </div>
-        </div>
-      </>
-    );
-  }
+      </div>
+    </>
+  );
 }
