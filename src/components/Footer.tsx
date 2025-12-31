@@ -8,10 +8,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <Sparkles className="h-6 w-6 text-primary" />
-                <span className="text-xl font-bold">SD Jewels</span>
-              </div>
+                <div className="flex items-center space-x-2 mb-4">
+                  <Sparkles className="h-6 w-6 text-primary" />
+                  <span className="text-xl font-bold">SD Trends</span>
+                </div>
               <p className="text-sm text-muted-foreground mb-4">
                 Discover beautiful imitation jewellery for every occasion. Quality craftsmanship at affordable prices.
               </p>
@@ -100,9 +100,9 @@ export default function Footer() {
           </div>
         </div>
 
-          <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; {new Date().getFullYear()} SD Jewels. All rights reserved.</p>
-          </div>
+            <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
+              <p>&copy; {new Date().getFullYear()} SD Trends. All rights reserved.</p>
+            </div>
       </div>
     </footer>
   );

@@ -88,7 +88,7 @@ export default function Home() {
         <div className="relative z-10 text-center text-white px-4 max-w-3xl mx-auto">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Gem className="h-8 w-8" />
-            <h1 className="text-5xl md:text-6xl font-bold">SD Jewels</h1>
+            <h1 className="text-5xl md:text-6xl font-bold">SD Trends</h1>
           </div>
           <p className="text-xl md:text-2xl mb-8 text-gray-200">
             Discover Beautiful Imitation Jewellery for Every Occasion

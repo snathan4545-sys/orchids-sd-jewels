@@ -23,7 +23,7 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  title: "SD Jewels - Beautiful Imitation Jewellery",
+  title: "SD Trends - Beautiful Imitation Jewellery",
   description: "Discover beautiful imitation jewellery for every occasion. Quality craftsmanship at affordable prices.",
 };
 
