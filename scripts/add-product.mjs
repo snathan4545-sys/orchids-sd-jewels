@@ -13,19 +13,17 @@ async function addProduct() {
   try {
     const now = new Date().toISOString();
     const result = await db.insert(products).values({
-      name: 'Elegant Stone Pendant Necklace Set',
-      description: 'Luxurious gold-tone necklace set featuring ornate links with crystal detailing and a stunning pendant with emerald green or ruby red stone centerpiece. Includes matching drop earrings. Perfect for weddings and special occasions.',
-      price: 749,
-      originalPrice: 899,
+      name: 'Peacock Pendant Chain Necklace Set',
+      description: 'Exquisite gold-tone necklace set featuring delicate peacock motifs with pink ruby stone accents. Elegant design with matching earrings. Perfect for weddings and traditional occasions.',
+      price: 299,
+      originalPrice: 499,
       category: 'necklaces',
       images: [
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.30.00-PM-1767208717814.jpeg?width=8000&height=8000&resize=contain',
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.30.06-PM-1767208717805.jpeg?width=8000&height=8000&resize=contain',
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.31.15-PM-1767208717801.jpeg?width=8000&height=8000&resize=contain',
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.31.27-PM-1767208717793.jpeg?width=8000&height=8000&resize=contain'
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.31.53-PM-1767209141442.jpeg?width=1200&height=1200&resize=contain',
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.32.07-PM-1767209141432.jpeg?width=1200&height=1200&resize=contain'
       ],
-      colors: ['Green', 'Red'],
-      inStock: 8,
+      colors: null,
+      inStock: 6,
       featured: false,
       createdAt: now,
       updatedAt: now,
