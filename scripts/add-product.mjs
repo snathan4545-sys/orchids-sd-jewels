@@ -11,18 +11,18 @@ const db = drizzle(client);
 
 async function addProduct() {
   try {
-    const now = new Date().toISOString();
+      const now = new Date().toISOString();
       const result = await db.insert(products).values({
-        name: 'Pink Stone Triangle Pendant Necklace',
-        description: 'Elegant golden oval chain necklace with a triangular pink stone pendant and pearl drop, paired with matching earrings.',
-        price: 499,
-        originalPrice: 540,
+        name: 'Green Stone Necklace Set',
+        description: 'Gold-tone necklace set with green stone centerpiece and matching earrings.',
+        price: 699,
+        originalPrice: 899,
         category: 'necklaces',
         images: [
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.24.14-PM-1767205130047.jpeg?width=8000&height=8000&resize=contain',
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.24.147-PM-1767205129950.jpeg?width=8000&height=8000&resize=contain'
+          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/11-1767205510652.jpeg?width=8000&height=8000&resize=contain',
+          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.24.14-PM-1767205510834.jpeg?width=8000&height=8000&resize=contain'
         ],
-        colors: ['Pink'],
+        colors: null,
         inStock: 3,
         featured: false,
         createdAt: now,
