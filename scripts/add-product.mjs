@@ -13,14 +13,14 @@ async function addProduct() {
   try {
     const now = new Date().toISOString();
     const result = await db.insert(products).values({
-      name: 'Designer Stone Necklace Set',
-      description: 'Exquisite gold-tone necklace set with teardrop-shaped links featuring intricate stone work and a statement pendant with matching earrings.',
-      price: 549,
-      originalPrice: 699,
+      name: 'Premium Link Necklace Set',
+      description: 'Elegant gold-tone necklace featuring interlocking teardrop links with textured detailing and matching earrings. Perfect statement piece for special occasions.',
+      price: 699,
+      originalPrice: 899,
       category: 'necklaces',
       images: [
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.25.30-PM-1767207285900.jpeg?width=8000&height=8000&resize=contain',
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.25.38-PM-1767207286010.jpeg?width=8000&height=8000&resize=contain'
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/1-1767207528173.jpeg?width=8000&height=8000&resize=contain',
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.25.43-PM-1767207527839.jpeg?width=8000&height=8000&resize=contain'
       ],
       colors: null,
       inStock: 3,
