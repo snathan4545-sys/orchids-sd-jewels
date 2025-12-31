@@ -12,22 +12,23 @@ const db = drizzle(client);
 async function addProduct() {
   try {
     const now = new Date().toISOString();
-    const result = await db.insert(products).values({
-      name: 'Gold-Tone Blue Gemstone Link Necklace Set',
-      description: 'Stunning gold-tone necklace set featuring alternating ornate circular links and rectangular blue gemstone elements with detailed borders. Intricate craftsmanship with delicate chain design. Comes with matching drop earrings. Perfect for traditional occasions and formal celebrations.',
-      price: 699,
-      originalPrice: 5799,
-      category: 'necklaces',
-      images: [
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2026-01-01-at-1.39.43-1-1767211964054.jpeg?width=1200&height=1200&resize=contain&quality=95',
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2026-01-01-at-1.39.43-AM-1767211964034.jpeg?width=1200&height=1200&resize=contain&quality=95'
-      ],
-      colors: null,
-      inStock: 8,
-      featured: false,
-      createdAt: now,
-      updatedAt: now,
-    }).returning();
+        const result = await db.insert(products).values({
+          name: 'Luxe Emerald Teardrop Statement Necklace Set',
+          description: 'Opulent gold-tone necklace featuring cascading emerald green teardrop gemstones encased in sparkling crystal halos. Elegant chain design with crystal embellishments. Dramatic statement piece with matching teardrop earrings. Ideal for weddings, receptions, and upscale events.',
+          price: 759,
+          originalPrice: 899,
+          category: 'necklaces',
+          images: [
+            'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/3-1767212215433.jpeg?width=1200&height=1200&resize=contain&quality=95',
+            'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2026-01-01-at-1.38.31-AM-1767212215550.jpeg?width=1200&height=1200&resize=contain&quality=95'
+          ],
+          colors: null,
+          inStock: true,
+          featured: false,
+          createdAt: now,
+          updatedAt: now,
+        }).returning();
+
 
     console.log('Product added:', result[0]);
     process.exit(0);
