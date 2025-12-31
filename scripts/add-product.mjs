@@ -13,14 +13,14 @@ async function addProduct() {
   try {
     const now = new Date().toISOString();
     const result = await db.insert(products).values({
-      name: 'Crystal Flower Starburst Necklace Set',
-      description: 'Elegant gold-tone necklace set featuring delicate crystal flower motifs and a stunning starburst pendant with sparkling stones. Comes with matching earrings. Perfect for weddings and parties.',
-      price: 499,
-      originalPrice: 599,
+      name: 'Antique Mango Pearl Drop Necklace Set',
+      description: 'Exquisite gold-tone antique necklace set with intricate mango (paisley) motifs adorned with precious stones and pearl drops. Features a statement pendant with pearls. Comes with matching earrings. Perfect for traditional ceremonies and weddings.',
+      price: 799,
+      originalPrice: 999,
       category: 'necklaces',
       images: [
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.32.59-PM-1767210100184.jpeg?width=1200&height=1200&resize=contain&quality=95',
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.33.10-PM-1767210116926.jpeg?width=1200&height=1200&resize=contain&quality=95'
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.33.35-PM-1767210496614.jpeg?width=1200&height=1200&resize=contain&quality=95',
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.33.52-PM-1767210496626.jpeg?width=1200&height=1200&resize=contain&quality=95'
       ],
       colors: null,
       inStock: 8,
