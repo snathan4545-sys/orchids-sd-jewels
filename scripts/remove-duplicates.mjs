@@ -1,21 +1,49 @@
-import { drizzle } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
-import { products } from '../src/db/schema.ts';
-import { eq } from 'drizzle-orm';
+import 'dotenv/config';
 
-const client = createClient({
+const db = createClient({
   url: process.env.TURSO_CONNECTION_URL,
-  authToken: process.env.TURSO_AUTH_TOKEN
+  authToken: process.env.TURSO_AUTH_TOKEN,
 });
 
-const db = drizzle(client);
+try {
+  // Find and delete duplicates (keep lower ID)
+  const duplicates = [
+    { name: 'Elegant Gold-Tone Necklace with Blue Gemstone Pendant', ids: [220, 221] },
+    { name: 'Gold-Tone Leaf Pearl Necklace Set', ids: [217, 218] },
+    { name: 'Luxe Emerald Teardrop Statement Necklace Set', ids: [222, 223] },
+    { name: 'Peacock Pendant Chain Necklace Set', ids: [211, 212] },
+    { name: 'Traditional Deity Pearl Necklace Set', ids: [213, 214] },
+  ];
 
-const duplicateIds = [100, 106, 107, 109];
+  for (const dup of duplicates) {
+    // Keep the first ID, delete the rest
+    const [keep, ...deleteIds] = dup.ids;
+    console.log(`Keeping ID ${keep} for "${dup.name}", deleting:`, deleteIds);
+    
+    for (const id of deleteIds) {
+      await db.execute({
+        sql: 'DELETE FROM products WHERE id = ?',
+        args: [id]
+      });
+      console.log(`  Deleted ID ${id}`);
+    }
+  }
 
-for (const id of duplicateIds) {
-  await db.delete(products).where(eq(products.id, id));
-  console.log(`Deleted product ID: ${id}`);
+  console.log('\n✅ Successfully removed all duplicates');
+
+  // Verify
+  const remaining = await db.execute(`
+    SELECT name, COUNT(*) as count 
+    FROM products 
+    GROUP BY name 
+    HAVING COUNT(*) > 1
+  `);
+
+  console.log('\nRemaining duplicates:', remaining.rows);
+
+} catch (error) {
+  console.error('Error:', error);
+} finally {
+  db.close();
 }
-
-console.log(`Removed ${duplicateIds.length} duplicate products`);
-process.exit(0);
