@@ -13,17 +13,19 @@ async function addProduct() {
   try {
     const now = new Date().toISOString();
     const result = await db.insert(products).values({
-      name: 'Premium Link Necklace Set',
-      description: 'Elegant gold-tone necklace featuring interlocking teardrop links with textured detailing and matching earrings. Perfect statement piece for special occasions.',
-      price: 699,
-      originalPrice: 899,
+      name: 'Traditional Beaded Stone Necklace',
+      description: 'Stunning gold-tone traditional necklace featuring intricately textured beads with emerald green and ruby pink stone accents. Perfect for weddings and festive occasions.',
+      price: 549,
+      originalPrice: 699,
       category: 'necklaces',
       images: [
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/1-1767207528173.jpeg?width=8000&height=8000&resize=contain',
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.25.43-PM-1767207527839.jpeg?width=8000&height=8000&resize=contain'
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.28.43-PM-1767207888107.jpeg?width=8000&height=8000&resize=contain',
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.28.48-PM-1767207888517.jpeg?width=8000&height=8000&resize=contain',
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.28.53-PM-1767207888120.jpeg?width=8000&height=8000&resize=contain',
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.29.01-PM-1767207888127.jpeg?width=8000&height=8000&resize=contain'
       ],
       colors: null,
-      inStock: 3,
+      inStock: 5,
       featured: false,
       createdAt: now,
       updatedAt: now,
