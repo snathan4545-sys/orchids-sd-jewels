@@ -13,14 +13,14 @@ async function addProduct() {
   try {
     const now = new Date().toISOString();
     const result = await db.insert(products).values({
-      name: 'Gold-Tone Gemstone Drop Necklace Set',
-      description: 'Elegant gold-tone necklace set featuring circular gemstone pendants in vibrant green and pink hues. Delicate chain with small gold beads and ornate stone drops. Comes with matching earrings. Perfect for traditional events and festive celebrations.',
-      price: 499,
-      originalPrice: 599,
+      name: 'Gold-Tone Blue Gemstone Link Necklace Set',
+      description: 'Stunning gold-tone necklace set featuring alternating ornate circular links and rectangular blue gemstone elements with detailed borders. Intricate craftsmanship with delicate chain design. Comes with matching drop earrings. Perfect for traditional occasions and formal celebrations.',
+      price: 699,
+      originalPrice: 5799,
       category: 'necklaces',
       images: [
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.35.05-PM-1767211330488.jpeg?width=1200&height=1200&resize=contain&quality=95',
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.35.06-PM-1767211330507.jpeg?width=1200&height=1200&resize=contain&quality=95'
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2026-01-01-at-1.39.43-1-1767211964054.jpeg?width=1200&height=1200&resize=contain&quality=95',
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2026-01-01-at-1.39.43-AM-1767211964034.jpeg?width=1200&height=1200&resize=contain&quality=95'
       ],
       colors: null,
       inStock: 8,
