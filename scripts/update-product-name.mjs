@@ -14,14 +14,9 @@ const client = createClient({
 
 const db = drizzle(client);
 
-async function updateLvGoldenKadasBracelet() {
+async function updateLvGoldenKadasBraceletPrice() {
   const productId = 112;
-
-  // Remove the specific pic the user referenced (and any matching variant)
-  const explicitRemoveUrls = new Set([
-    'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.07-1766600553763.jpeg?width=8000&height=8000&resize=contain',
-    'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-24-at-23.14.07-1766600406742.jpeg?width=8000&height=8000&resize=contain',
-  ]);
+  const nextPrice = 219;
 
   const now = new Date().toISOString();
 
@@ -36,31 +31,26 @@ async function updateLvGoldenKadasBracelet() {
   }
 
   const current = existing[0];
-  const currentImages = Array.isArray(current.images) ? current.images : [];
-
-  const nextImages = currentImages.filter((url) => {
-    if (explicitRemoveUrls.has(url)) return false;
-    // Also remove any URL that contains this filename prefix
-    if (url.includes('WhatsApp-Image-2025-12-24-at-23.14.07')) return false;
-    return true;
-  });
-
-  const finalImages = nextImages.length > 0 ? nextImages : currentImages;
 
   const updated = await db
     .update(products)
     .set({
-      price: 299,
-      images: finalImages,
+      price: nextPrice,
       updatedAt: now,
     })
     .where(eq(products.id, productId))
     .returning();
 
-  console.log('Product updated:', updated[0]);
+  console.log('Kadas bracelet price updated:', {
+    id: current.id,
+    name: current.name,
+    category: current.category,
+    oldPrice: current.price,
+    newPrice: updated[0]?.price,
+  });
 }
 
-updateLvGoldenKadasBracelet().catch((error) => {
+updateLvGoldenKadasBraceletPrice().catch((error) => {
   console.error('Error updating product:', error);
   process.exit(1);
 });
