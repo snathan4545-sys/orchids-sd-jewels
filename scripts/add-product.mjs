@@ -13,17 +13,17 @@ async function addProduct() {
   try {
     const now = new Date().toISOString();
     const result = await db.insert(products).values({
-      name: 'Peacock Pendant Chain Necklace Set',
-      description: 'Exquisite gold-tone necklace set featuring delicate peacock motifs with pink ruby stone accents. Elegant design with matching earrings. Perfect for weddings and traditional occasions.',
-      price: 299,
-      originalPrice: 499,
+      name: 'Traditional Deity Pearl Necklace Set',
+      description: 'Stunning gold-tone necklace set featuring intricate deity pendant with pearl drops and ruby stone embellishments. Comes with matching earrings. Perfect for festivals and special occasions.',
+      price: 749,
+      originalPrice: 999,
       category: 'necklaces',
       images: [
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.31.53-PM-1767209141442.jpeg?width=1200&height=1200&resize=contain',
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.32.07-PM-1767209141432.jpeg?width=1200&height=1200&resize=contain'
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.30.34-PM-1767209607818.jpeg?width=1200&height=1200&resize=contain&quality=95',
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.30.47-PM-1767209607830.jpeg?width=1200&height=1200&resize=contain&quality=95'
       ],
       colors: null,
-      inStock: 6,
+      inStock: 8,
       featured: false,
       createdAt: now,
       updatedAt: now,
