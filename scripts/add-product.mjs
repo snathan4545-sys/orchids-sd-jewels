@@ -11,24 +11,23 @@ const db = drizzle(client);
 
 async function addProduct() {
   try {
-      const now = new Date().toISOString();
-      const result = await db.insert(products).values({
-        name: 'Green Stone Necklace Set',
-        description: 'Gold-tone necklace set with green stone centerpiece and matching earrings.',
-        price: 699,
-        originalPrice: 899,
-        category: 'necklaces',
-        images: [
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/11-1767205510652.jpeg?width=8000&height=8000&resize=contain',
-          'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.24.14-PM-1767205510834.jpeg?width=8000&height=8000&resize=contain'
-        ],
-        colors: null,
-        inStock: 3,
-        featured: false,
-        createdAt: now,
-        updatedAt: now,
-      }).returning();
-
+    const now = new Date().toISOString();
+    const result = await db.insert(products).values({
+      name: 'Designer Stone Necklace Set',
+      description: 'Exquisite gold-tone necklace set with teardrop-shaped links featuring intricate stone work and a statement pendant with matching earrings.',
+      price: 549,
+      originalPrice: 699,
+      category: 'necklaces',
+      images: [
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.25.30-PM-1767207285900.jpeg?width=8000&height=8000&resize=contain',
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.25.38-PM-1767207286010.jpeg?width=8000&height=8000&resize=contain'
+      ],
+      colors: null,
+      inStock: 3,
+      featured: false,
+      createdAt: now,
+      updatedAt: now,
+    }).returning();
 
     console.log('Product added:', result[0]);
     process.exit(0);
