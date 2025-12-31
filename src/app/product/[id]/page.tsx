@@ -334,36 +334,6 @@ export default function ProductDetailPage() {
             </Button>
           </div>
 
-          {/* Additional Info */}
-          <div className="mt-8 space-y-4 text-sm">
-            <div className="flex items-start gap-2">
-              <svg className="h-5 w-5 text-primary mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <div>
-                <p className="font-semibold">Free Shipping</p>
-                <p className="text-muted-foreground">On orders above ₹999</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-2">
-              <svg className="h-5 w-5 text-primary mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div>
-                <p className="font-semibold">7 Day Return</p>
-                <p className="text-muted-foreground">Easy return & exchange policy</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-2">
-              <svg className="h-5 w-5 text-primary mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              <div>
-                <p className="font-semibold">Secure Payment</p>
-                <p className="text-muted-foreground">100% secure payment methods</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
