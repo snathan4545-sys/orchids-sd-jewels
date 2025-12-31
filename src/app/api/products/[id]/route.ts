@@ -3,7 +3,7 @@ import { db } from '@/db';
 import { products } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
-const VALID_CATEGORIES = ['necklaces', 'earrings', 'bracelets', 'rings', 'impon', 'guarantee-chains'];
+const VALID_CATEGORIES = ['necklaces', 'earrings', 'bracelets', 'rings', 'combo', 'guarantee-chains'];
 
 export async function GET(
   request: NextRequest,

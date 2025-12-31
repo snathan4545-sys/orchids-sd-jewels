@@ -22,7 +22,7 @@ export default function Header() {
     { name: 'Earrings', href: '/products?category=earrings' },
     { name: 'Bracelets', href: '/products?category=bracelets' },
     { name: 'Rings', href: '/products?category=rings' },
-    { name: 'Impon', href: '/products?category=impon' },
+    { name: 'Combo', href: '/products?category=combo' },
     { name: 'Guarantee Chains', href: '/products?category=guarantee-chains' },
   ];
 

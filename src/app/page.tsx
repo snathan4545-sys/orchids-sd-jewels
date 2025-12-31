@@ -59,8 +59,8 @@ export default function Home() {
       description: 'Beautiful & Unique',
     },
     {
-      name: 'Impon',
-      href: '/products?category=impon',
+      name: 'Combo',
+      href: '/products?category=combo',
       image: 'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=600&q=80',
       description: 'Premium Collection',
     },

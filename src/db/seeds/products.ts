@@ -3,13 +3,13 @@ import { products } from '@/db/schema';
 
 async function main() {
     const newProducts = [
-        // Impon Category Products (3 products)
+        // Combo Category Products (3 products)
         {
-            name: '22K Gold Impon Bangle Set',
-            description: 'Exquisite 22K gold-plated impon bangle set featuring traditional meenakari work and intricate patterns. Perfect for weddings, festivals, and special occasions. Lightweight and comfortable for all-day wear.',
+            name: '22K Gold Combo Bangle Set',
+            description: 'Exquisite 22K gold-plated combo bangle set featuring traditional meenakari work and intricate patterns. Perfect for weddings, festivals, and special occasions. Lightweight and comfortable for all-day wear.',
             price: 3499,
             originalPrice: 4499,
-            category: 'impon',
+            category: 'combo',
             images: [
                 'https://images.unsplash.com/photo-1611652022419-a9419f74343d-jewelry',
                 '/images/products/22k-gold-impon-bangle-set.jpg',
@@ -23,11 +23,11 @@ async function main() {
             updatedAt: new Date().toISOString(),
         },
         {
-            name: 'Traditional Impon Kada',
+            name: 'Traditional Combo Kada',
             description: 'Stunning traditional kada with 22K gold plating and ethnic designs inspired by royal heritage. Features durable construction with premium finish. Ideal for traditional wear and cultural celebrations.',
             price: 2799,
             originalPrice: null,
-            category: 'impon',
+            category: 'combo',
             images: [
                 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f-jewelry',
                 '/images/products/traditional-impon-kada.jpg'
@@ -40,11 +40,11 @@ async function main() {
             updatedAt: new Date().toISOString(),
         },
         {
-            name: 'Bridal Impon Jewelry Set',
-            description: 'Complete bridal jewelry set with gold-plated impon bangles, matching earrings, and necklace. Adorned with premium stones and pearls. Crafted for grand wedding celebrations and ceremonial occasions.',
+            name: 'Bridal Combo Jewelry Set',
+            description: 'Complete bridal jewelry set with gold-plated combo bangles, matching earrings, and necklace. Adorned with premium stones and pearls. Crafted for grand wedding celebrations and ceremonial occasions.',
             price: 4999,
             originalPrice: 6499,
-            category: 'impon',
+            category: 'combo',
             images: [
                 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338-jewelry',
                 '/images/products/bridal-impon-jewelry-set.jpg',
@@ -117,7 +117,7 @@ async function main() {
 
     await db.insert(products).values(newProducts);
     
-    console.log('✅ Products seeder completed successfully - Added 6 new imitation jewelry products');
+    console.log('✅ Products seeder completed successfully - Added 6 new jewelry products');
 }
 
 main().catch((error) => {
