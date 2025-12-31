@@ -13,14 +13,14 @@ async function addProduct() {
   try {
     const now = new Date().toISOString();
         const result = await db.insert(products).values({
-          name: 'Luxe Emerald Teardrop Statement Necklace Set',
-          description: 'Opulent gold-tone necklace featuring cascading emerald green teardrop gemstones encased in sparkling crystal halos. Elegant chain design with crystal embellishments. Dramatic statement piece with matching teardrop earrings. Ideal for weddings, receptions, and upscale events.',
-          price: 759,
+          name: 'Regal Peacock Pendant Necklace with Multicolor Stones',
+          description: 'Stunning gold-tone necklace featuring an exquisite peacock motif pendant encircled by shimmering crystals. Ornate chain adorned with ruby-red and emerald-green gemstones. Teardrop pendant showcases intricate peacock craftsmanship. Complete set with matching peacock earrings. Perfect for festive celebrations and grand occasions.',
+          price: 799,
           originalPrice: 899,
           category: 'necklaces',
           images: [
-            'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/3-1767212215433.jpeg?width=1200&height=1200&resize=contain&quality=95',
-            'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2026-01-01-at-1.38.31-AM-1767212215550.jpeg?width=1200&height=1200&resize=contain&quality=95'
+            'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/2-1767212382226.jpeg?width=1200&height=1200&resize=contain&quality=95',
+            'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2026-01-01-at-1.39.02-AM-1767212382221.jpeg?width=1200&height=1200&resize=contain&quality=95'
           ],
           colors: null,
           inStock: true,
