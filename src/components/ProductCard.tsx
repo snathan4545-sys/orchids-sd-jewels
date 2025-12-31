@@ -36,12 +36,13 @@ export default function ProductCard({ product }: ProductCardProps) {
       <Card className="group overflow-hidden hover:shadow-lg transition-shadow duration-300">
         <CardContent className="p-0 relative">
           <div className="relative aspect-square overflow-hidden bg-muted">
-            <Image
-              src={images[0] || '/placeholder.png'}
-              alt={product.name}
-              fill
-              className={`object-cover group-hover:scale-110 transition-transform duration-300 ${!product.inStock ? 'opacity-50' : ''}`}
-            />
+              <Image
+                src={images[0] || '/placeholder.png'}
+                alt={product.name}
+                fill
+                className={`object-cover group-hover:scale-110 transition-transform duration-300 ${!product.inStock ? 'opacity-50' : ''}`}
+                unoptimized
+              />
             {!product.inStock && (
               <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                 <Badge className="bg-destructive text-white text-lg px-4 py-2">

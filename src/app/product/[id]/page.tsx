@@ -197,6 +197,7 @@ export default function ProductDetailPage() {
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                 priority
+                unoptimized
               />
               {discount > 0 && (
                 <Badge className="absolute top-4 left-4 bg-destructive">
@@ -224,6 +225,7 @@ export default function ProductDetailPage() {
                   alt={`${product.name} - ${index + 1}`}
                   fill
                   className="object-cover"
+                  unoptimized
                 />
               </button>
             ))}
@@ -411,6 +413,7 @@ export default function ProductDetailPage() {
                 className="object-contain transition-transform duration-200"
                 style={{ transform: `scale(${zoomScale})` }}
                 sizes="(min-width: 1024px) 800px, 100vw"
+                unoptimized
               />
             </div>
 
@@ -441,6 +444,7 @@ export default function ProductDetailPage() {
                       alt={`${product.name} preview ${index + 1}`}
                       fill
                       className="object-cover"
+                      unoptimized
                     />
                   </button>
                 ))}
