@@ -13,14 +13,14 @@ async function addProduct() {
   try {
     const now = new Date().toISOString();
     const result = await db.insert(products).values({
-      name: 'Antique Mango Pearl Drop Necklace Set',
-      description: 'Exquisite gold-tone antique necklace set with intricate mango (paisley) motifs adorned with precious stones and pearl drops. Features a statement pendant with pearls. Comes with matching earrings. Perfect for traditional ceremonies and weddings.',
-      price: 799,
-      originalPrice: 999,
+      name: 'Gold-Tone Leaf Pearl Necklace Set',
+      description: 'Beautiful gold-tone necklace set with intricate leaf motifs and sparkling stone embellishments. Features a stunning centerpiece pendant with pearl drop. Comes with matching earrings. Perfect for traditional occasions and festive celebrations.',
+      price: 499,
+      originalPrice: 599,
       category: 'necklaces',
       images: [
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.33.35-PM-1767210496614.jpeg?width=1200&height=1200&resize=contain&quality=95',
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.33.52-PM-1767210496626.jpeg?width=1200&height=1200&resize=contain&quality=95'
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.34.05-PM-1767211114159.jpeg?width=1200&height=1200&resize=contain&quality=95',
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.34.24-PM-1767211114288.jpeg?width=1200&height=1200&resize=contain&quality=95'
       ],
       colors: null,
       inStock: 8,
