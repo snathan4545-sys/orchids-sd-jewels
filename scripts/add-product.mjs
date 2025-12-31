@@ -13,14 +13,14 @@ async function addProduct() {
   try {
     const now = new Date().toISOString();
     const result = await db.insert(products).values({
-      name: 'Gold-Tone Leaf Pearl Necklace Set',
-      description: 'Beautiful gold-tone necklace set with intricate leaf motifs and sparkling stone embellishments. Features a stunning centerpiece pendant with pearl drop. Comes with matching earrings. Perfect for traditional occasions and festive celebrations.',
+      name: 'Gold-Tone Gemstone Drop Necklace Set',
+      description: 'Elegant gold-tone necklace set featuring circular gemstone pendants in vibrant green and pink hues. Delicate chain with small gold beads and ornate stone drops. Comes with matching earrings. Perfect for traditional events and festive celebrations.',
       price: 499,
       originalPrice: 599,
       category: 'necklaces',
       images: [
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.34.05-PM-1767211114159.jpeg?width=1200&height=1200&resize=contain&quality=95',
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.34.24-PM-1767211114288.jpeg?width=1200&height=1200&resize=contain&quality=95'
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.35.05-PM-1767211330488.jpeg?width=1200&height=1200&resize=contain&quality=95',
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.35.06-PM-1767211330507.jpeg?width=1200&height=1200&resize=contain&quality=95'
       ],
       colors: null,
       inStock: 8,
