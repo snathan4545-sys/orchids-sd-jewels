@@ -13,14 +13,14 @@ async function addProduct() {
   try {
     const now = new Date().toISOString();
     const result = await db.insert(products).values({
-      name: 'Traditional Deity Pearl Necklace Set',
-      description: 'Stunning gold-tone necklace set featuring intricate deity pendant with pearl drops and ruby stone embellishments. Comes with matching earrings. Perfect for festivals and special occasions.',
-      price: 749,
-      originalPrice: 999,
+      name: 'Crystal Flower Starburst Necklace Set',
+      description: 'Elegant gold-tone necklace set featuring delicate crystal flower motifs and a stunning starburst pendant with sparkling stones. Comes with matching earrings. Perfect for weddings and parties.',
+      price: 499,
+      originalPrice: 599,
       category: 'necklaces',
       images: [
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.30.34-PM-1767209607818.jpeg?width=1200&height=1200&resize=contain&quality=95',
-        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.30.47-PM-1767209607830.jpeg?width=1200&height=1200&resize=contain&quality=95'
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.32.59-PM-1767210100184.jpeg?width=1200&height=1200&resize=contain&quality=95',
+        'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2025-12-31-at-2.33.10-PM-1767210116926.jpeg?width=1200&height=1200&resize=contain&quality=95'
       ],
       colors: null,
       inStock: 8,
