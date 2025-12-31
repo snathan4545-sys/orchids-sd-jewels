@@ -59,15 +59,15 @@ function ProductsContent() {
     fetchProducts();
   }, [selectedCategory, priceRange]);
 
-  const categories = [
-    { value: 'all', label: 'All Products' },
-    { value: 'necklaces', label: 'Necklaces' },
-    { value: 'earrings', label: 'Earrings' },
-    { value: 'bracelets', label: 'Bracelets' },
-    { value: 'rings', label: 'Rings' },
-    { value: 'impon', label: 'Impon' },
-    { value: 'guarantee-chains', label: 'Guarantee Chains' },
-  ];
+    const categories = [
+      { value: 'all', label: 'All Products' },
+      { value: 'necklaces', label: 'Necklaces' },
+      { value: 'earrings', label: 'Earrings' },
+      { value: 'bracelets', label: 'Bracelets' },
+      { value: 'rings', label: 'Rings' },
+      { value: 'combo', label: 'Combo' },
+      { value: 'guarantee-chains', label: 'Guarantee Chains' },
+    ];
 
   // Sort products
   let filteredProducts = [...products];
