@@ -3,13 +3,13 @@ import { products } from '@/db/schema';
 
 async function main() {
     const newProduct = {
-        name: 'Elegant Gift box combo - 3',
+        name: 'Elegant Gift box combo - 4',
         description: 'Contains 6 Rings, 3 Earring, 1 2nd stud, 2 bracelets',
         price: 899,
         originalPrice: null,
         category: 'combo',
         images: [
-            'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/4-1767285086103.jpeg'
+            'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/5-1767285188078.jpeg'
         ],
         colors: ['Mixed Gold & Rose Gold'],
         sizes: ['Standard'],
@@ -21,7 +21,7 @@ async function main() {
 
     await db.insert(products).values(newProduct);
     
-    console.log('✅ Added Elegant Gift box combo - 3 to combo category');
+    console.log('✅ Added Elegant Gift box combo - 4 to combo category');
     process.exit(0);
 }
 
