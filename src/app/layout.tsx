@@ -8,6 +8,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/react";
 
 const playfair = Playfair_Display({ 
   subsets: ["latin"],
@@ -58,8 +59,10 @@ export default function RootLayout({
           <Footer />
         </CartProvider>
         <Toaster position="top-right" richColors />
-        <VisualEditsMessenger />
-      </body>
+          <VisualEditsMessenger />
+          <Analytics />
+        </body>
+
     </html>
   );
 }
