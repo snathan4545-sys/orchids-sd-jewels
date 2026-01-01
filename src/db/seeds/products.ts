@@ -3,57 +3,58 @@ import { products } from '@/db/schema';
 
 async function main() {
     const newProducts = [
-        // Combo Category Products (3 products)
+        // Combo Category Products - Gift Box Sets
         {
-            name: '22K Gold Combo Bangle Set',
-            description: 'Exquisite 22K gold-plated combo bangle set featuring traditional meenakari work and intricate patterns. Perfect for weddings, festivals, and special occasions. Lightweight and comfortable for all-day wear.',
-            price: 3499,
-            originalPrice: 4499,
-            category: 'combo',
-            images: [
-                'https://images.unsplash.com/photo-1611652022419-a9419f74343d-jewelry',
-                '/images/products/22k-gold-impon-bangle-set.jpg',
-                'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908-jewelry'
-            ],
-            colors: ['22K Gold', 'Antique Gold', 'Rose Gold'],
-            sizes: ['2.4', '2.6', '2.8'],
-            inStock: true,
-            featured: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        },
-        {
-            name: 'Traditional Combo Kada',
-            description: 'Stunning traditional kada with 22K gold plating and ethnic designs inspired by royal heritage. Features durable construction with premium finish. Ideal for traditional wear and cultural celebrations.',
-            price: 2799,
+            name: 'Elegant Combo Gift Box',
+            description: 'Products Listed: 6 rings, 4 earrings, 2 bracelets',
+            price: 899,
             originalPrice: null,
             category: 'combo',
             images: [
-                'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f-jewelry',
-                '/images/products/traditional-impon-kada.jpg'
+                'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/2-1767283857904.jpeg',
+                'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/3-1767283858340.jpeg',
+                'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/4-1767283857930.jpeg'
             ],
-            colors: ['22K Gold', 'Antique Gold'],
-            sizes: ['2.4', '2.6', '2.8', 'Free Size'],
+            colors: ['Mixed Gold & Silver'],
+            sizes: ['Standard'],
             inStock: true,
-            featured: false,
+            featured: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         },
         {
-            name: 'Bridal Combo Jewelry Set',
-            description: 'Complete bridal jewelry set with gold-plated combo bangles, matching earrings, and necklace. Adorned with premium stones and pearls. Crafted for grand wedding celebrations and ceremonial occasions.',
-            price: 4999,
-            originalPrice: 6499,
+            name: 'Premium Combo Gift Box',
+            description: 'Products Listed: 6 rings, 4 earrings, 2 bracelets',
+            price: 899,
+            originalPrice: null,
             category: 'combo',
             images: [
-                'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338-jewelry',
-                '/images/products/bridal-impon-jewelry-set.jpg',
-                'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed-jewelry'
+                'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/5-1767283857978.jpeg',
+                'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/WhatsApp-Image-2026-01-01-at-9.36.58-PM-1767283857936.jpeg',
+                'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/2-1767283857904.jpeg'
             ],
-            colors: ['22K Gold', 'Rose Gold'],
-            sizes: ['2.4', '2.6', 'Free Size'],
+            colors: ['Mixed Gold & Rose Gold'],
+            sizes: ['Standard'],
             inStock: true,
             featured: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+        },
+        {
+            name: 'Deluxe Combo Gift Box',
+            description: 'Products Listed: 6 rings, 4 earrings, 2 bracelets',
+            price: 899,
+            originalPrice: null,
+            category: 'combo',
+            images: [
+                'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/4-1767283857930.jpeg',
+                'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/3-1767283858340.jpeg',
+                'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/5-1767283857978.jpeg'
+            ],
+            colors: ['Mixed Gold Tones'],
+            sizes: ['Standard'],
+            inStock: true,
+            featured: false,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         },
