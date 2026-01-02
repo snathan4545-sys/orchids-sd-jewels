@@ -6,15 +6,8 @@ const client = createClient({
 });
 
 async function main() {
-  // original_price is the strikethrough price, price is the discounted price
-  await client.execute("UPDATE products SET original_price = 1399, price = 989 WHERE name = 'Blooms Gift box combo - 5'");
-  console.log('Updated Blooms Gift box combo - 5');
-  
-  await client.execute("UPDATE products SET original_price = 1399, price = 989 WHERE name = 'Blooms Gift box combo - 2'");
-  console.log('Updated Blooms Gift box combo - 2');
-  
-  await client.execute("UPDATE products SET original_price = 1099, price = 899 WHERE name = 'Blooms Gift box combo - 3'");
-  console.log('Updated Blooms Gift box combo - 3');
+  await client.execute("UPDATE products SET description = 'Contains 6 Rings, 3 Earring, 2 studs, 1 Anti-tarnish Chain' WHERE name = 'Blooms Gift box combo - 2'");
+  console.log('Updated description for Blooms Gift box combo - 2');
 }
 
 main().catch(console.error);
