@@ -10,11 +10,11 @@ async function main() {
   await client.execute({
     sql: "INSERT INTO products (name, description, price, original_price, images, category, in_stock, featured, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     args: [
-      'Blooms Gift box combo - 1',
+      'Blooms Gift box combo - 6',
       'Contains 6 Rings, 3 Earring, 1 2nd stud, 1 Anti-tarnish Chain',
-      989,
-      1399,
-      JSON.stringify(['https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/document-uploads/chain-2-1767384254616.jpeg']),
+      899,
+      1099,
+      JSON.stringify(['https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/document-uploads/chain-6-1767384436083.jpeg']),
       'combo',
       1,
       1,
@@ -22,7 +22,7 @@ async function main() {
       now
     ]
   });
-  console.log('Added Blooms Gift box combo - 1');
+  console.log('Added Blooms Gift box combo - 6');
 }
 
 main().catch(console.error);
