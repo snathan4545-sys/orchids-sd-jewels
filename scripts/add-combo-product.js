@@ -6,8 +6,23 @@ const client = createClient({
 });
 
 async function main() {
-  await client.execute("UPDATE products SET description = 'Contains 6 Rings, 3 Earring, 2 studs, 1 Anti-tarnish Chain' WHERE name = 'Blooms Gift box combo - 2'");
-  console.log('Updated description for Blooms Gift box combo - 2');
+  const now = new Date().toISOString();
+  await client.execute({
+    sql: "INSERT INTO products (name, description, price, original_price, images, category, in_stock, featured, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    args: [
+      'Blooms Gift box combo - 1',
+      'Contains 6 Rings, 3 Earring, 1 2nd stud, 1 Anti-tarnish Chain',
+      989,
+      1399,
+      JSON.stringify(['https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/document-uploads/chain-2-1767384254616.jpeg']),
+      'combo',
+      1,
+      1,
+      now,
+      now
+    ]
+  });
+  console.log('Added Blooms Gift box combo - 1');
 }
 
 main().catch(console.error);
