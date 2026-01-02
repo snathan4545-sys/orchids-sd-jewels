@@ -6,13 +6,15 @@ const client = createClient({
 });
 
 async function main() {
-  // Find all duplicate "Blooms Gift box combo - 1" entries
-  const result = await client.execute("SELECT id, name FROM products WHERE name = 'Blooms Gift box combo - 1'");
-  console.log('Found entries:', result.rows);
+  // original_price is the strikethrough price, price is the discounted price
+  await client.execute("UPDATE products SET original_price = 1399, price = 989 WHERE name = 'Blooms Gift box combo - 5'");
+  console.log('Updated Blooms Gift box combo - 5');
   
-  // Delete all of them
-  const deleteResult = await client.execute("DELETE FROM products WHERE name = 'Blooms Gift box combo - 1'");
-  console.log('Deleted', deleteResult.rowsAffected, 'entries');
+  await client.execute("UPDATE products SET original_price = 1399, price = 989 WHERE name = 'Blooms Gift box combo - 2'");
+  console.log('Updated Blooms Gift box combo - 2');
+  
+  await client.execute("UPDATE products SET original_price = 1099, price = 899 WHERE name = 'Blooms Gift box combo - 3'");
+  console.log('Updated Blooms Gift box combo - 3');
 }
 
 main().catch(console.error);
