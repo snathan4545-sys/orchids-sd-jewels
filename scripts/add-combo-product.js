@@ -7,14 +7,14 @@ const client = createClient({
 
 async function main() {
   const now = new Date().toISOString();
-  const images = JSON.stringify(['https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Chain-1-1767382929501.jpeg?width=8000&height=8000&resize=contain']);
+  const images = JSON.stringify(['https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/chain-2-1767383447758.jpeg?width=8000&height=8000&resize=contain']);
   
   const result = await client.execute({
     sql: `INSERT INTO products (name, description, price, category, images, in_stock, featured, created_at, updated_at)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     args: [
-      'Blooms Gift box combo - 5',
-      'Contains 6 Rings, 3 Earring, 1 2nd stud, 1 Chain',
+      'Blooms Gift box combo - 1',
+      'Contains 6 Rings, 3 Earring, 1 2nd stud, 1 Anti-tarnish Chain',
       999,
       'combo',
       images,
@@ -24,7 +24,7 @@ async function main() {
       now
     ]
   });
-  console.log('Added Blooms Gift box combo - 5 to combo section');
+  console.log('Added Blooms Gift box combo - 1 to combo section');
   console.log('Insert result:', result);
 }
 
