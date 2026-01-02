@@ -8,40 +8,30 @@ const client = createClient({
 async function main() {
   const now = new Date().toISOString();
   
-  const products = [
-    {
-      name: 'Blooms Gift box combo - 1',
-      description: 'Contains 6 Rings, 3 Earring, 1 2nd stud, 1 Anti-tarnish Chain',
-      price: 999,
-      image: 'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/chain-2-1767383447758.jpeg?width=8000&height=8000&resize=contain'
-    },
-    {
-      name: 'Blooms Gift box combo - 2',
-      description: 'Contains 6 Rings, 3 Earring, 1 2nd stud, 1 Anti-tarnish Chain',
-      price: 999,
-      image: 'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/chain-3-1767383526831.jpeg?width=8000&height=8000&resize=contain'
-    }
-  ];
+  const product = {
+    name: 'Blooms Gift box combo - 3',
+    description: 'Contains 6 Rings, 3 Earring, 1 2nd stud, 1 Anti-tarnish Chain',
+    price: 899,
+    image: 'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/chain-4-1767383608728.jpeg?width=8000&height=8000&resize=contain'
+  };
 
-  for (const product of products) {
-    const images = JSON.stringify([product.image]);
-    const result = await client.execute({
-      sql: `INSERT INTO products (name, description, price, category, images, in_stock, featured, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      args: [
-        product.name,
-        product.description,
-        product.price,
-        'combo',
-        images,
-        1,
-        0,
-        now,
-        now
-      ]
-    });
-    console.log(`Added ${product.name} to combo section`);
-  }
+  const images = JSON.stringify([product.image]);
+  await client.execute({
+    sql: `INSERT INTO products (name, description, price, category, images, in_stock, featured, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    args: [
+      product.name,
+      product.description,
+      product.price,
+      'combo',
+      images,
+      1,
+      0,
+      now,
+      now
+    ]
+  });
+  console.log(`Added ${product.name} to combo section`);
 }
 
 main().catch(console.error);
