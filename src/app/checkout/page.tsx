@@ -236,15 +236,15 @@ export default function CheckoutPage() {
                       <div
                         className="flex flex-col items-center justify-center p-6 rounded-lg border-2 border-primary bg-primary/5 transition-all"
                       >
-                        <div className="flex gap-2 mb-3">
-                          <span className="text-sm font-bold px-2 py-0.5 rounded bg-blue-600 text-white">UPI</span>
-                          <span className="text-sm font-bold px-2 py-0.5 rounded bg-green-600 text-white">GPay</span>
-                          <span className="text-sm font-bold px-2 py-0.5 rounded bg-purple-600 text-white">PhonePe</span>
-                        </div>
-                        <span className="font-semibold text-base">Online Payment</span>
-                        <span className="text-sm text-muted-foreground text-center mt-2">
-                          Securely pay with UPI, Cards, or NetBanking via Stripe
-                        </span>
+                          <div className="flex gap-2 mb-3">
+                            <span className="text-sm font-bold px-2 py-0.5 rounded bg-blue-600 text-white">UPI ID</span>
+                            <span className="text-sm font-bold px-2 py-0.5 rounded bg-green-600 text-white">GPay</span>
+                            <span className="text-sm font-bold px-2 py-0.5 rounded bg-purple-600 text-white">PhonePe</span>
+                          </div>
+                          <span className="font-semibold text-base">Online Payment</span>
+                          <span className="text-sm text-muted-foreground text-center mt-2">
+                            Securely pay with UPI ID or Cards via Stripe
+                          </span>
                       </div>
                     </div>
                   </div>
