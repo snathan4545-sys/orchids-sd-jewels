@@ -80,7 +80,7 @@ export default function RegisterPage() {
                             />
                         </div>
                     </CardContent>
-                    <CardFooter className="flex flex-col space-y-4">
+                    <CardFooter className="flex flex-col space-y-4 pt-4">
                         <Button type="submit" className="w-full" disabled={loading}>
                             {loading ? "Creating Account..." : "Register"}
                         </Button>
