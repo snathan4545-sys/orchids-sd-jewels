@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       0
     );
 
-    const tax = Math.round(total * 0.18);
+    const tax = Math.round(total * 0.03);
     const shipping = total >= 999 ? 0 : 50;
     const grandTotal = total + tax + shipping;
 

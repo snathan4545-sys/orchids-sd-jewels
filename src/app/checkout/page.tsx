@@ -38,7 +38,7 @@ export default function CheckoutPage() {
       }
     }, [cart.length, orderPlaced]);
 
-    const tax = Math.round(cartTotal * 0.18);
+    const tax = Math.round(cartTotal * 0.03);
     const shipping = cartTotal >= 999 ? 0 : 50;
     const grandTotal = cartTotal + tax + shipping;
 
@@ -360,10 +360,10 @@ export default function CheckoutPage() {
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="font-medium">₹{cartTotal}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Tax (18%)</span>
-                <span className="font-medium">₹{tax}</span>
-              </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Tax (3%)</span>
+                  <span className="font-medium">₹{tax}</span>
+                </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Shipping</span>
                 <span className="font-medium text-green-600">

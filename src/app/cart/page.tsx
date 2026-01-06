@@ -17,7 +17,7 @@ export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
-  const tax = Math.round(cartTotal * 0.18);
+  const tax = Math.round(cartTotal * 0.03);
   const shipping = cartTotal >= 999 ? 0 : 50;
   const grandTotal = cartTotal + tax + shipping;
 
@@ -71,8 +71,9 @@ export default function CartPage() {
   };
 
   const handlePlaceOrder = () => {
-    const shipping = 55;
-    const total = cartTotal + shipping;
+    const tax = Math.round(cartTotal * 0.03);
+    const shipping = cartTotal >= 999 ? 0 : 50;
+    const total = cartTotal + tax + shipping;
 
     let message = `*New Order Request*\n\n`;
     message += `*Order Details:*\n`;
@@ -88,7 +89,8 @@ export default function CartPage() {
 
     message += `\n─────────────────\n`;
     message += `*Subtotal:* ₹${cartTotal}\n`;
-    message += `*Shipping:* ₹${shipping}\n`;
+    message += `*Tax (3% GST):* ₹${tax}\n`;
+    message += `*Shipping:* ${shipping === 0 ? 'FREE' : `₹${shipping}`}\n`;
     message += `*Total Amount:* ₹${total}\n`;
     message += `\nPlease confirm this order.`;
 
@@ -231,10 +233,10 @@ export default function CartPage() {
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="font-medium">₹{cartTotal}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Tax (18% GST)</span>
-                <span className="font-medium">₹{tax}</span>
-              </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Tax (3% GST)</span>
+                  <span className="font-medium">₹{tax}</span>
+                </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Shipping</span>
                 <span className="font-medium text-green-600">

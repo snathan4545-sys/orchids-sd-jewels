@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const tax = Math.round(subtotal * 0.18);
+    const tax = Math.round(subtotal * 0.03);
     const shipping = subtotal >= 999 ? 0 : 50;
     const total = subtotal + tax + shipping;
 
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
         price_data: {
           currency: 'inr',
           product_data: {
-            name: 'Tax (18% GST)',
+            name: 'Tax (3% GST)',
             images: [],
             metadata: {},
           },
