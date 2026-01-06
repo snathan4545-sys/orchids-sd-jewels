@@ -13,24 +13,38 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { ensureArray } from '@/lib/utils';
+import { authClient } from '@/lib/auth-client';
 import { ReturnPolicyDialog } from '@/components/ReturnPolicyDialog';
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, cartTotal, clearCart } = useCart();
+  const { data: session } = authClient.useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderId, setOrderId] = useState('');
   const [showReturnPolicy, setShowReturnPolicy] = useState(false);
   
-    const [paymentMethod, setPaymentMethod] = useState<'online' | 'cod'>('online');
-    
-    const [formData, setFormData] = useState({
-      customerName: '',
-      customerPhone: '',
-      email: '',
-      address: '',
-    });
+  const [paymentMethod, setPaymentMethod] = useState<'online'>('online');
+  
+  const [formData, setFormData] = useState({
+    customerName: '',
+    customerPhone: '',
+    email: '',
+    address: '',
+  });
+
+  useEffect(() => {
+    if (session?.user) {
+      setFormData(prev => ({
+        ...prev,
+        customerName: session.user.name || prev.customerName,
+        customerPhone: (session.user as any).phoneNumber || prev.customerPhone,
+        email: session.user.email || prev.email,
+      }));
+    }
+  }, [session]);
+
 
     useEffect(() => {
       if (cart.length > 0 && !orderPlaced) {
@@ -69,9 +83,8 @@ export default function CheckoutPage() {
       }
 
       setIsSubmitting(true);
-
-      try {
-        if (paymentMethod === 'online') {
+  
+        try {
           // Handle Stripe Checkout
           const response = await fetch('/api/checkout', {
             method: 'POST',
@@ -94,43 +107,8 @@ export default function CheckoutPage() {
           } else {
             throw new Error(data.error || 'Failed to create checkout session');
           }
-        } else {
-          // Handle Cash on Delivery
-          const response = await fetch('/api/orders', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              customerName: formData.customerName,
-              customerPhone: formData.customerPhone,
-              email: formData.email,
-              address: formData.address,
-              items: cart.map(item => ({
-                id: item.id,
-                name: item.name,
-                quantity: item.quantity,
-                price: item.price,
-                selectedColor: item.selectedColor,
-                selectedSize: item.selectedSize,
-              })),
-            }),
-          });
+        } catch (error) {
 
-          const data = await response.json();
-
-          if (response.ok && data.success) {
-            setOrderId(data.orderId);
-            setOrderPlaced(true);
-            clearCart();
-            toast.success('Order placed successfully!', {
-              description: 'You will receive a confirmation on WhatsApp shortly.',
-            });
-          } else {
-            throw new Error(data.error || 'Failed to place order');
-          }
-        }
-      } catch (error) {
         console.error('Order error:', error);
         toast.error('Failed to process order', {
           description: error instanceof Error ? error.message : 'Please try again',
@@ -252,66 +230,41 @@ export default function CheckoutPage() {
                   />
                 </div>
 
-                <div className="space-y-4 pt-4">
-                  <h3 className="text-lg font-medium">Payment Method</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('online')}
-                      className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all ${
-                        paymentMethod === 'online'
-                          ? 'border-primary bg-primary/5'
-                          : 'border-muted bg-transparent hover:border-muted-foreground/30'
-                      }`}
-                    >
-                      <div className="flex gap-2 mb-2">
-                        <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-blue-600 text-white">UPI</span>
-                        <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-green-600 text-white">GPay</span>
-                        <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-purple-600 text-white">PhonePe</span>
+                  <div className="space-y-4 pt-4">
+                    <h3 className="text-lg font-medium">Payment Method</h3>
+                    <div className="grid grid-cols-1 gap-4">
+                      <div
+                        className="flex flex-col items-center justify-center p-6 rounded-lg border-2 border-primary bg-primary/5 transition-all"
+                      >
+                        <div className="flex gap-2 mb-3">
+                          <span className="text-sm font-bold px-2 py-0.5 rounded bg-blue-600 text-white">UPI</span>
+                          <span className="text-sm font-bold px-2 py-0.5 rounded bg-green-600 text-white">GPay</span>
+                          <span className="text-sm font-bold px-2 py-0.5 rounded bg-purple-600 text-white">PhonePe</span>
+                        </div>
+                        <span className="font-semibold text-base">Online Payment</span>
+                        <span className="text-sm text-muted-foreground text-center mt-2">
+                          Securely pay with UPI, Cards, or NetBanking via Stripe
+                        </span>
                       </div>
-                      <span className="font-semibold text-sm">Online Payment</span>
-                      <span className="text-xs text-muted-foreground text-center mt-1">
-                        UPI, Cards, NetBanking
-                      </span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('cod')}
-                      className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all ${
-                        paymentMethod === 'cod'
-                          ? 'border-primary bg-primary/5'
-                          : 'border-muted bg-transparent hover:border-muted-foreground/30'
-                      }`}
-                    >
-                      <div className="h-5 mb-2 flex items-center justify-center">
-                        <svg className="h-5 w-5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                      </div>
-                      <span className="font-semibold text-sm">Cash on Delivery</span>
-                      <span className="text-xs text-muted-foreground text-center mt-1">
-                        Pay when you receive
-                      </span>
-                    </button>
+                    </div>
                   </div>
-                </div>
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full h-12 text-base font-semibold"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                      {paymentMethod === 'online' ? 'Redirecting to Payment...' : 'Placing Order...'}
-                    </>
-                  ) : (
-                    paymentMethod === 'online' ? 'Pay Now & Place Order' : 'Place Order (COD)'
-                  )}
-                </Button>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full h-14 text-lg font-bold"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-6 w-6 mr-3 animate-spin" />
+                        Redirecting to Payment...
+                      </>
+                    ) : (
+                      'Pay Now & Place Order'
+                    )}
+                  </Button>
+
 
             </form>
           </Card>

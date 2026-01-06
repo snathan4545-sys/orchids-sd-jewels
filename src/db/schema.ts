@@ -43,6 +43,7 @@ export const user = sqliteTable("user", {
   image: text("image"),
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
+  phoneNumber: text("phoneNumber"),
 }, (table) => [
   uniqueIndex("user_email_unique").on(table.email),
 ]);

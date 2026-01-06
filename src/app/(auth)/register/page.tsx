@@ -13,6 +13,7 @@ import { toast } from "sonner";
 export default function RegisterPage() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -24,6 +25,7 @@ export default function RegisterPage() {
             email,
             password,
             name,
+            phoneNumber,
             callbackURL: "/",
         }, {
             onRequest: () => setLoading(true),
@@ -66,6 +68,17 @@ export default function RegisterPage() {
                                 placeholder="name@example.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="phoneNumber">Phone Number</Label>
+                            <Input
+                                id="phoneNumber"
+                                type="tel"
+                                placeholder="+91 12345 67890"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
                                 required
                             />
                         </div>

@@ -7,13 +7,15 @@ const client = twilio(
 
 export async function sendOrderNotification(
   recipientPhoneNumber: string,
-  orderDetails: {
-    orderId: string;
-    customerName: string;
-    customerPhone: string;
-    totalPrice: number;
-    items: Array<{ name: string; quantity: number; price: number; selectedColor?: string; selectedSize?: string }>;
-  }
+    orderDetails: {
+      orderId: string;
+      customerName: string;
+      customerPhone: string;
+      customerEmail?: string;
+      address: string;
+      totalPrice: number;
+      items: Array<{ name: string; quantity: number; price: number; selectedColor?: string; selectedSize?: string }>;
+    }
 ) {
   try {
     const itemsList = orderDetails.items
@@ -25,7 +27,8 @@ export async function sendOrderNotification(
       })
       .join('\n');
 
-      const message = `🎉 New Order Received!\n\nOrder ID: ${orderDetails.orderId}\n\nCustomer: ${orderDetails.customerName}\nPhone: ${orderDetails.customerPhone}\n\nItems:\n${itemsList}\n\nTotal Amount: ₹${orderDetails.totalPrice}\n\n---\nSD Trends`;
+      const message = `🎉 New Order Received!\n\nOrder ID: ${orderDetails.orderId}\n\nCustomer: ${orderDetails.customerName}\nPhone: ${orderDetails.customerPhone}${orderDetails.customerEmail ? `\nEmail: ${orderDetails.customerEmail}` : ''}\n\nAddress:\n${orderDetails.address}\n\nItems:\n${itemsList}\n\nTotal Amount: ₹${orderDetails.totalPrice}\n\n---\nSD Trends`;
+
 
     const result = await client.messages.create({
       from: `whatsapp:${process.env.TWILIO_WHATSAPP_FROM}`,

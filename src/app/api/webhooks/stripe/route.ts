@@ -4,6 +4,7 @@ import { db } from '@/db';
 import { orders, products } from '@/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import Stripe from 'stripe';
+import { sendOrderNotification } from '@/lib/whatsapp-notifier';
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
@@ -83,8 +84,34 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        console.log(`Order ${orderId} marked as paid`);
-        break;
+          console.log(`Order ${orderId} marked as paid`);
+
+          // Send WhatsApp notification to owner
+          if (order) {
+            try {
+              const items = typeof order.items === 'string' 
+                ? JSON.parse(order.items) 
+                : order.items;
+
+              await sendOrderNotification(
+                '+919363475021', // Owner's WhatsApp number
+                {
+                  orderId: order.id,
+                  customerName: order.customerName,
+                  customerPhone: order.customerPhone,
+                  customerEmail: order.customerEmail || undefined,
+                  address: order.address,
+                  totalPrice: order.total,
+                  items: items,
+                }
+              );
+              console.log(`WhatsApp notification sent for order ${orderId}`);
+            } catch (whatsappError) {
+              console.error('WhatsApp notification failed (non-blocking):', whatsappError);
+            }
+          }
+          break;
+
       }
 
       case 'checkout.session.expired': {
