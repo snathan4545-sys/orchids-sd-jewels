@@ -1,25 +1,79 @@
 "use client";
 
+import { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, CreditCard, Loader2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useRouter } from 'next/navigation';
 import { ensureArray } from '@/lib/utils';
+import { toast } from 'sonner';
 
 export default function CartPage() {
   const router = useRouter();
   const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  const tax = Math.round(cartTotal * 0.18);
+  const shipping = cartTotal >= 999 ? 0 : 50;
+  const grandTotal = cartTotal + tax + shipping;
+
+  const handleStripeCheckout = async () => {
+    if (cart.length === 0) {
+      toast.error('Your cart is empty');
+      return;
+    }
+
+    setIsCheckingOut(true);
+
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items: cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            images: ensureArray<string>(item.images),
+            selectedColor: item.selectedColor,
+            selectedSize: item.selectedSize,
+          })),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      if (data.url) {
+        clearCart();
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast.error('Failed to start checkout', {
+        description: error instanceof Error ? error.message : 'Please try again',
+      });
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
 
   const handlePlaceOrder = () => {
-    // Calculate totals
     const shipping = 55;
     const total = cartTotal + shipping;
 
-    // Format order details for WhatsApp
     let message = `*New Order Request*\n\n`;
     message += `*Order Details:*\n`;
     
@@ -38,22 +92,12 @@ export default function CartPage() {
     message += `*Total Amount:* ₹${total}\n`;
     message += `\nPlease confirm this order.`;
 
-    // Encode message for URL
     const encodedMessage = encodeURIComponent(message);
-    
-      // WhatsApp number (India country code + number)
-      const whatsappNumber = '919363475021';
-    
-    // Create WhatsApp URL
+    const whatsappNumber = '919363475021';
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
     
-    // Clear cart
     clearCart();
-    
-    // Open WhatsApp
     window.open(whatsappUrl, '_blank');
-    
-    // Redirect to products page
     router.push('/products');
   };
 
@@ -188,8 +232,14 @@ export default function CartPage() {
                 <span className="font-medium">₹{cartTotal}</span>
               </div>
               <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Tax (18% GST)</span>
+                <span className="font-medium">₹{tax}</span>
+              </div>
+              <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Shipping</span>
-                <span className="font-medium">₹55</span>
+                <span className="font-medium text-green-600">
+                  {shipping === 0 ? 'FREE' : `₹${shipping}`}
+                </span>
               </div>
             </div>
 
@@ -198,20 +248,41 @@ export default function CartPage() {
             <div className="flex justify-between mb-6">
               <span className="text-lg font-bold">Total</span>
               <span className="text-lg font-bold">
-                ₹{cartTotal + 55}
+                ₹{grandTotal}
               </span>
             </div>
 
             <Button 
               size="lg" 
               className="w-full mb-3 gap-2"
-              onClick={handlePlaceOrder}
+              onClick={handleStripeCheckout}
+              disabled={isCheckingOut || cart.length === 0}
             >
-              Place Order via WhatsApp <ArrowRight className="h-4 w-4" />
+              {isCheckingOut ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <CreditCard className="h-4 w-4" />
+                  Pay with Card
+                </>
+              )}
+            </Button>
+
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="w-full mb-3 gap-2"
+              onClick={handlePlaceOrder}
+              disabled={isCheckingOut}
+            >
+              Order via WhatsApp <ArrowRight className="h-4 w-4" />
             </Button>
 
             <Link href="/products">
-              <Button variant="outline" size="lg" className="w-full">
+              <Button variant="ghost" size="lg" className="w-full">
                 Continue Shopping
               </Button>
             </Link>
@@ -221,13 +292,19 @@ export default function CartPage() {
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
-                <span>Secure via WhatsApp</span>
+                <span>Secure payment via Stripe</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>7-day return policy</span>
+              </div>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{cartTotal >= 999 ? 'Free shipping applied!' : 'Free shipping on orders ₹999+'}</span>
               </div>
             </div>
           </Card>

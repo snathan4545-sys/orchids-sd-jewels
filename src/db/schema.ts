@@ -16,6 +16,25 @@ export const products = sqliteTable('products', {
   updatedAt: text('updated_at').notNull(),
 });
 
+export const orders = sqliteTable('orders', {
+  id: text('id').primaryKey().notNull(),
+  customerName: text('customer_name').notNull(),
+  customerEmail: text('customer_email'),
+  customerPhone: text('customer_phone').notNull(),
+  address: text('address').notNull(),
+  items: text('items', { mode: 'json' }).notNull(),
+  subtotal: integer('subtotal').notNull(),
+  tax: integer('tax').notNull(),
+  shipping: integer('shipping').notNull(),
+  total: integer('total').notNull(),
+  status: text('status').notNull().default('pending'),
+  paymentStatus: text('payment_status').notNull().default('pending'),
+  stripeSessionId: text('stripe_session_id'),
+  stripePaymentIntentId: text('stripe_payment_intent_id'),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
+});
+
 export const user = sqliteTable("user", {
   id: text("id").primaryKey().notNull(),
   name: text("name").notNull(),
