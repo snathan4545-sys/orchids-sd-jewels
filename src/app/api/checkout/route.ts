@@ -109,11 +109,15 @@ export async function POST(request: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      payment_method_types: ['card'],
       line_items: lineItems,
       customer_email: customerEmail || undefined,
       metadata: {
         orderId,
+      },
+      payment_method_options: {
+        card: {
+          request_three_d_secure: 'automatic',
+        },
       },
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
       cancel_url: `${origin}/checkout/cancel?order_id=${orderId}`,
