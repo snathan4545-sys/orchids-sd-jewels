@@ -1,11 +1,20 @@
 "use client";
 
 import Link from 'next/link';
-import { ShoppingCart, Search, Menu, Gem } from 'lucide-react';
+import { ShoppingCart, Search, Menu, Gem, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useCart } from '@/contexts/CartContext';
 import { useState } from 'react';
+import { authClient } from '@/lib/auth-client';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
@@ -15,6 +24,7 @@ import {
 export default function Header() {
   const { cartCount } = useCart();
   const [searchOpen, setSearchOpen] = useState(false);
+  const { data: session, isPending } = authClient.useSession();
 
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -49,30 +59,63 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Actions */}
-          <div className="flex items-center space-x-4">
-            {/* Search */}
-            <div className="hidden lg:block">
-              {searchOpen ? (
-                <Input
-                  type="search"
-                  placeholder="Search jewelry..."
-                  className="w-64"
-                  onBlur={() => setSearchOpen(false)}
-                  autoFocus
-                />
-              ) : (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setSearchOpen(true)}
-                >
-                  <Search className="h-5 w-5" />
-                </Button>
-              )}
-            </div>
+            {/* Actions */}
+            <div className="flex items-center space-x-4">
+              {/* Search */}
+              <div className="hidden lg:block">
+                {searchOpen ? (
+                  <Input
+                    type="search"
+                    placeholder="Search jewelry..."
+                    className="w-64"
+                    onBlur={() => setSearchOpen(false)}
+                    autoFocus
+                  />
+                ) : (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSearchOpen(true)}
+                  >
+                    <Search className="h-5 w-5" />
+                  </Button>
+                )}
+              </div>
 
-            {/* Cart */}
+              {/* Auth */}
+              <div className="flex items-center">
+                {isPending ? (
+                  <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
+                ) : session ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="rounded-full">
+                        <User className="h-5 w-5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>
+                        <div className="flex flex-col">
+                          <span>{session.user.name}</span>
+                          <span className="text-xs font-normal text-muted-foreground">{session.user.email}</span>
+                        </div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => authClient.signOut()}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Logout</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Link href="/login">
+                    <Button variant="ghost" size="sm">Login</Button>
+                  </Link>
+                )}
+              </div>
+
+              {/* Cart */}
+
             <Link href="/cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
