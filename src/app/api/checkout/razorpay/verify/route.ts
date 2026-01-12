@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { db } from '@/db';
 import { orders } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { sendOrderNotification } from '@/lib/whatsapp-notifier';
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,9 +28,36 @@ export async function POST(request: NextRequest) {
         .where(eq(orders.id, orderId))
         .returning();
 
+      const order = updatedOrder[0];
+
+      // Send WhatsApp notification to owner
+      if (order) {
+        try {
+          const items = typeof order.items === 'string' 
+            ? JSON.parse(order.items) 
+            : order.items;
+
+          await sendOrderNotification(
+            '+919363475021', // Owner's WhatsApp number
+            {
+              orderId: order.id,
+              customerName: order.customerName,
+              customerPhone: order.customerPhone,
+              customerEmail: order.customerEmail || undefined,
+              address: order.address,
+              totalPrice: order.total,
+              items: items,
+            }
+          );
+          console.log(`WhatsApp notification sent for order ${orderId}`);
+        } catch (whatsappError) {
+          console.error('WhatsApp notification failed (non-blocking):', whatsappError);
+        }
+      }
+
       return NextResponse.json({ 
         success: true, 
-        order: updatedOrder[0] 
+        order: order 
       });
     } else {
       // Payment failed verification
