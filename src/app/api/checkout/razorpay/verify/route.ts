@@ -16,16 +16,20 @@ export async function POST(request: NextRequest) {
 
     if (generated_signature === razorpay_signature) {
       // Payment successful
-      await db
+      const updatedOrder = await db
         .update(orders)
         .set({
           status: 'confirmed',
           paymentStatus: 'paid',
           updatedAt: new Date().toISOString(),
         })
-        .where(eq(orders.id, orderId));
+        .where(eq(orders.id, orderId))
+        .returning();
 
-      return NextResponse.json({ success: true });
+      return NextResponse.json({ 
+        success: true, 
+        order: updatedOrder[0] 
+      });
     } else {
       // Payment failed verification
       await db
