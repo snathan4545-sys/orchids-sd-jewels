@@ -65,7 +65,7 @@ export const account = sqliteTable("account", {
 	providerId: text("provider_id").notNull(),
 	userId: text("user_id").notNull().references(() => user.id),
 	accessToken: text("access_token"),
-	refreshToken: text("refresh_token"),
+	refreshToken: text("refreshToken"),
 	idToken: text("id_token"),
 	accessTokenExpiresAt: integer("access_token_expires_at", { mode: "timestamp" }),
 	refreshTokenExpiresAt: integer("refresh_token_expires_at", { mode: "timestamp" }),

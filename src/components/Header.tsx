@@ -1,20 +1,32 @@
 "use client";
 
 import Link from 'next/link';
-import { ShoppingCart, Search, Menu, Gem } from 'lucide-react';
+import { ShoppingCart, Search, Menu, Gem, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useCart } from '@/contexts/CartContext';
 import { useState } from 'react';
+import { authClient } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Header() {
   const { cartCount } = useCart();
   const [searchOpen, setSearchOpen] = useState(false);
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
 
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -26,15 +38,20 @@ export default function Header() {
     { name: 'Guarantee Chains', href: '/products?category=guarantee-chains' },
   ];
 
+  const handleLogout = async () => {
+    await authClient.signOut();
+    router.refresh();
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-            <Link href="/" className="flex items-center space-x-2">
-              <Gem className="h-6 w-6 text-primary" />
-              <span className="text-xl font-bold">SD Trends</span>
-            </Link>
+          <Link href="/" className="flex items-center space-x-2">
+            <Gem className="h-6 w-6 text-primary" />
+            <span className="text-xl font-bold">SD Trends</span>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
@@ -50,7 +67,7 @@ export default function Header() {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 md:space-x-4">
             {/* Search */}
             <div className="hidden lg:block">
               {searchOpen ? (
@@ -84,6 +101,36 @@ export default function Header() {
               </Button>
             </Link>
 
+            {/* User Auth */}
+            <div className="hidden md:block">
+              {isPending ? (
+                <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
+              ) : session ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full">
+                      <User className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('/profile')}>
+                      Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer text-destructive" onClick={handleLogout}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Link href="/login">
+                  <Button variant="outline" size="sm">Login</Button>
+                </Link>
+              )}
+            </div>
+
             {/* Mobile Menu */}
             <Sheet>
               <SheetTrigger asChild className="md:hidden">
@@ -102,12 +149,22 @@ export default function Header() {
                       {link.name}
                     </Link>
                   ))}
-                  <div className="pt-4 border-t">
-                    <Input
-                      type="search"
-                      placeholder="Search jewelry..."
-                      className="w-full"
-                    />
+                  <div className="pt-4 border-t space-y-4">
+                    {session ? (
+                      <>
+                        <p className="text-sm font-medium px-2">Hi, {session.user.name}</p>
+                        <Button variant="outline" className="w-full justify-start" onClick={() => router.push('/profile')}>
+                          <User className="mr-2 h-4 w-4" /> Profile
+                        </Button>
+                        <Button variant="outline" className="w-full justify-start text-destructive" onClick={handleLogout}>
+                          <LogOut className="mr-2 h-4 w-4" /> Logout
+                        </Button>
+                      </>
+                    ) : (
+                      <Link href="/login" className="block">
+                        <Button className="w-full">Login</Button>
+                      </Link>
+                    )}
                   </div>
                 </nav>
               </SheetContent>
