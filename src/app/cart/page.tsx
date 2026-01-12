@@ -21,86 +21,12 @@ export default function CartPage() {
   const shipping = cartTotal >= 999 ? 0 : 50;
   const grandTotal = cartTotal + tax + shipping;
 
-  const handleStripeCheckout = async () => {
+  const handleCheckout = () => {
     if (cart.length === 0) {
       toast.error('Your cart is empty');
       return;
     }
-
-    setIsCheckingOut(true);
-
-    try {
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          items: cart.map(item => ({
-            id: item.id,
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
-            images: ensureArray<string>(item.images),
-            selectedColor: item.selectedColor,
-            selectedSize: item.selectedSize,
-          })),
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create checkout session');
-      }
-
-      if (data.url) {
-        clearCart();
-        window.location.href = data.url;
-      } else {
-        throw new Error('No checkout URL received');
-      }
-    } catch (error) {
-      console.error('Checkout error:', error);
-      toast.error('Failed to start checkout', {
-        description: error instanceof Error ? error.message : 'Please try again',
-      });
-    } finally {
-      setIsCheckingOut(false);
-    }
-  };
-
-  const handlePlaceOrder = () => {
-    const tax = Math.round(cartTotal * 0.03);
-    const shipping = cartTotal >= 999 ? 0 : 50;
-    const total = cartTotal + tax + shipping;
-
-    let message = `*New Order Request*\n\n`;
-    message += `*Order Details:*\n`;
-    
-    cart.forEach((item, index) => {
-      message += `\n${index + 1}. *${item.name}*\n`;
-      message += `   Quantity: ${item.quantity}\n`;
-      message += `   Price: ₹${item.price} each\n`;
-      if (item.selectedColor) message += `   Color: ${item.selectedColor}\n`;
-      if (item.selectedSize) message += `   Size: ${item.selectedSize}\n`;
-      message += `   Subtotal: ₹${item.price * item.quantity}\n`;
-    });
-
-    message += `\n─────────────────\n`;
-    message += `*Subtotal:* ₹${cartTotal}\n`;
-    message += `*Tax (3% GST):* ₹${tax}\n`;
-    message += `*Shipping:* ${shipping === 0 ? 'FREE' : `₹${shipping}`}\n`;
-    message += `*Total Amount:* ₹${total}\n`;
-    message += `\nPlease confirm this order.`;
-
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappNumber = '919363475021';
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
-    
-    clearCart();
-    window.open(whatsappUrl, '_blank');
-    router.push('/products');
+    router.push('/checkout');
   };
 
   if (cart.length === 0) {
@@ -257,34 +183,14 @@ export default function CartPage() {
             <Button 
               size="lg" 
               className="w-full mb-3 gap-2"
-              onClick={handleStripeCheckout}
-              disabled={isCheckingOut || cart.length === 0}
+              onClick={handleCheckout}
+              disabled={cart.length === 0}
             >
-              {isCheckingOut ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <CreditCard className="h-4 w-4" />
-                  Pay with Card
-                </>
-              )}
-            </Button>
-
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="w-full mb-3 gap-2"
-              onClick={handlePlaceOrder}
-              disabled={isCheckingOut}
-            >
-              Order via WhatsApp <ArrowRight className="h-4 w-4" />
+              Proceed to Checkout <ArrowRight className="h-4 w-4" />
             </Button>
 
             <Link href="/products">
-              <Button variant="ghost" size="lg" className="w-full">
+              <Button variant="outline" size="lg" className="w-full">
                 Continue Shopping
               </Button>
             </Link>
@@ -294,7 +200,7 @@ export default function CartPage() {
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
-                <span>Secure payment via Stripe</span>
+                <span>Secure payment via Razorpay</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
