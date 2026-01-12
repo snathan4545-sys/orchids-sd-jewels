@@ -41,7 +41,16 @@ export async function POST(request: NextRequest) {
 
     const orderId = `ORD-${nanoid(10)}`;
 
-    // Create database order
+    // 1. Create Razorpay order first to get the ID
+    const options = {
+      amount: total * 100, // amount in smallest currency unit (paise for INR)
+      currency: 'INR',
+      receipt: orderId,
+    };
+
+    const razorpayOrder = await razorpay.orders.create(options);
+
+    // 2. Create database order with Razorpay ID
     await db.insert(orders).values({
       id: orderId,
       customerName: customerName || '',
@@ -55,18 +64,10 @@ export async function POST(request: NextRequest) {
       total,
       status: 'pending',
       paymentStatus: 'pending',
+      razorpayOrderId: razorpayOrder.id,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-
-    // Create Razorpay order
-    const options = {
-      amount: total * 100, // amount in smallest currency unit (paise for INR)
-      currency: 'INR',
-      receipt: orderId,
-    };
-
-    const razorpayOrder = await razorpay.orders.create(options);
 
     return NextResponse.json({
       orderId: orderId,

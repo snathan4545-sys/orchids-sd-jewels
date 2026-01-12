@@ -41,23 +41,6 @@ export async function POST(request: NextRequest) {
 
     const orderId = `ORD-${nanoid(10)}`;
 
-    await db.insert(orders).values({
-      id: orderId,
-      customerName: customerName || '',
-      customerEmail: customerEmail || '',
-      customerPhone: customerPhone || '',
-      address: address || '',
-      items: JSON.stringify(items),
-      subtotal,
-      tax,
-      shipping,
-      total,
-      status: 'pending',
-      paymentStatus: 'pending',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
-
     const origin = request.headers.get('origin') || 'http://localhost:3000';
 
     const lineItems = items.map((item) => ({
@@ -67,7 +50,7 @@ export async function POST(request: NextRequest) {
           name: item.name,
           images: item.images?.filter(Boolean).slice(0, 8) || [],
           metadata: {
-            productId: item.id,
+            productId: item.id.toString(),
             selectedColor: item.selectedColor || '',
             selectedSize: item.selectedSize || '',
           },
@@ -117,6 +100,25 @@ export async function POST(request: NextRequest) {
       },
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
       cancel_url: `${origin}/checkout/cancel?order_id=${orderId}`,
+    });
+
+    // Create database order with Stripe session ID
+    await db.insert(orders).values({
+      id: orderId,
+      customerName: customerName || '',
+      customerEmail: customerEmail || '',
+      customerPhone: customerPhone || '',
+      address: address || '',
+      items: JSON.stringify(items),
+      subtotal,
+      tax,
+      shipping,
+      total,
+      status: 'pending',
+      paymentStatus: 'pending',
+      stripeSessionId: session.id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     });
 
     return NextResponse.json({

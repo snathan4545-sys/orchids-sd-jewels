@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
         .set({
           status: 'confirmed',
           paymentStatus: 'paid',
+          razorpayPaymentId: razorpay_payment_id,
           updatedAt: new Date().toISOString(),
         })
         .where(eq(orders.id, orderId))
