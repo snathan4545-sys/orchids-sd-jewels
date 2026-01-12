@@ -85,8 +85,8 @@ export default function CheckoutPage() {
       setIsSubmitting(true);
   
         try {
-          // Handle Stripe Checkout
-          const response = await fetch('/api/checkout', {
+          // Handle Razorpay Checkout
+          const response = await fetch('/api/checkout/razorpay', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -102,11 +102,59 @@ export default function CheckoutPage() {
 
           const data = await response.json();
 
-          if (data.url) {
-            window.location.href = data.url;
-          } else {
-            throw new Error(data.error || 'Failed to create checkout session');
+          if (!response.ok) {
+            throw new Error(data.error || 'Failed to create checkout order');
           }
+
+          const options = {
+            key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+            amount: data.amount,
+            currency: data.currency,
+            name: 'SD Trends',
+            description: 'Purchase from SD Trends',
+            order_id: data.razorpayOrderId,
+            handler: async function (response: any) {
+              try {
+                const verifyRes = await fetch('/api/checkout/razorpay/verify', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                    orderId: data.orderId,
+                  }),
+                });
+
+                const verifyData = await verifyRes.json();
+
+                if (verifyData.success) {
+                  setOrderId(data.orderId);
+                  setOrderPlaced(true);
+                  clearCart();
+                  toast.success('Payment successful! Order placed.');
+                } else {
+                  toast.error('Payment verification failed');
+                }
+              } catch (err) {
+                console.error('Verification error:', err);
+                toast.error('Failed to verify payment');
+              }
+            },
+            prefill: {
+              name: formData.customerName,
+              email: formData.email,
+              contact: formData.customerPhone,
+            },
+            theme: {
+              color: '#000000',
+            },
+          };
+
+          const rzp = new (window as any).Razorpay(options);
+          rzp.open();
         } catch (error) {
 
         console.error('Order error:', error);
@@ -241,10 +289,10 @@ export default function CheckoutPage() {
                             <span className="text-sm font-bold px-2 py-0.5 rounded bg-green-600 text-white">GPay</span>
                             <span className="text-sm font-bold px-2 py-0.5 rounded bg-purple-600 text-white">PhonePe</span>
                           </div>
-                          <span className="font-semibold text-base">Online Payment</span>
-                          <span className="text-sm text-muted-foreground text-center mt-2">
-                            Securely pay with UPI ID or Cards via Stripe
-                          </span>
+                            <span className="font-semibold text-base">Online Payment</span>
+                            <span className="text-sm text-muted-foreground text-center mt-2">
+                              Securely pay with UPI ID, GPay, PhonePe or Cards
+                            </span>
                       </div>
                     </div>
                   </div>
