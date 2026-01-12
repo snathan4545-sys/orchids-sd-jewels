@@ -1,10 +1,3 @@
-import twilio from 'twilio';
-
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
-
 export async function sendOrderNotification(
   recipientPhoneNumber: string,
     orderDetails: {
@@ -27,18 +20,21 @@ export async function sendOrderNotification(
       })
       .join('\n');
 
-      const message = `🎉 New Order Received!\n\nOrder ID: ${orderDetails.orderId}\n\nCustomer: ${orderDetails.customerName}\nPhone: ${orderDetails.customerPhone}${orderDetails.customerEmail ? `\nEmail: ${orderDetails.customerEmail}` : ''}\n\nAddress:\n${orderDetails.address}\n\nItems:\n${itemsList}\n\nTotal Amount: ₹${orderDetails.totalPrice}\n\n---\nSD Trends`;
+    const message = `🎉 New Order Received!\n\nOrder ID: ${orderDetails.orderId}\n\nCustomer: ${orderDetails.customerName}\nPhone: ${orderDetails.customerPhone}${orderDetails.customerEmail ? `\nEmail: ${orderDetails.customerEmail}` : ''}\n\nAddress:\n${orderDetails.address}\n\nItems:\n${itemsList}\n\nTotal Amount: ₹${orderDetails.totalPrice}\n\n---\nSD Trends`;
 
+    // Since the user requested "No need twilio" and "Customer should not be taken to WhatsApp",
+    // and we cannot send automated WhatsApp messages without an API key (like Twilio, Interakt, or WhatsApp Cloud API),
+    // we are logging the order details for the admin.
+    // To implement background WhatsApp notifications, you will need a WhatsApp API service.
+    
+    console.log('--- ADMIN ORDER NOTIFICATION (WHATSAPP PENDING) ---');
+    console.log(`To: ${recipientPhoneNumber}`);
+    console.log(message);
+    console.log('----------------------------------------------------');
 
-    const result = await client.messages.create({
-      from: `whatsapp:${process.env.TWILIO_WHATSAPP_FROM}`,
-      to: `whatsapp:${recipientPhoneNumber}`,
-      body: message,
-    });
-
-    return { success: true, messageSid: result.sid };
+    return { success: true, logged: true };
   } catch (error) {
-    console.error('WhatsApp notification failed:', error);
-    throw new Error(`Failed to send WhatsApp: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('Notification logic failed:', error);
+    throw new Error(`Failed to process notification: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
