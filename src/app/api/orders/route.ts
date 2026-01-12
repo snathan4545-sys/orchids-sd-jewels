@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendOrderNotification } from '@/lib/whatsapp-notifier';
 import { db } from '@/db';
-import { products, orders } from '@/db/schema';
+import { products } from '@/db/schema';
 import { eq, sql } from 'drizzle-orm';
 
 export async function POST(request: NextRequest) {
@@ -20,42 +20,16 @@ export async function POST(request: NextRequest) {
     const orderId = `ORD-${Date.now()}`;
 
     // Calculate total
-    const subtotal = orderData.items.reduce(
+    const total = orderData.items.reduce(
       (sum: number, item: any) => sum + item.price * item.quantity,
       0
     );
 
-    const tax = Math.round(subtotal * 0.03); // 3% GST as per other routes
-    const shipping = subtotal >= 999 ? 0 : 50;
-    const grandTotal = subtotal + tax + shipping;
+    const tax = Math.round(total * 0.18);
+    const shipping = total >= 999 ? 0 : 50;
+    const grandTotal = total + tax + shipping;
 
-    // 1. Create order in database
-    try {
-      await db.insert(orders).values({
-        id: orderId,
-        customerName: orderData.customerName,
-        customerEmail: orderData.customerEmail || '',
-        customerPhone: orderData.customerPhone,
-        address: orderData.address || 'Cash on Delivery / Direct Order',
-        items: JSON.stringify(orderData.items),
-        subtotal,
-        tax,
-        shipping,
-        total: grandTotal,
-        status: 'pending',
-        paymentStatus: 'pending',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-    } catch (dbError) {
-      console.error('Failed to create order in database:', dbError);
-      return NextResponse.json(
-        { error: 'Failed to save order' },
-        { status: 500 }
-      );
-    }
-
-    // 2. Update product quantities
+    // Update product quantities
     try {
       for (const item of orderData.items) {
         await db.update(products)
@@ -66,24 +40,28 @@ export async function POST(request: NextRequest) {
       }
     } catch (dbError) {
       console.error('Failed to update product quantities:', dbError);
-      // Non-blocking for the user, but we should log it
+      return NextResponse.json(
+        { error: 'Failed to update inventory' },
+        { status: 500 }
+      );
     }
 
-    // 3. Send WhatsApp notification
-    try {
-      await sendOrderNotification(
-        '+919363475021', // Your WhatsApp number
-        {
-          orderId,
-          customerName: orderData.customerName,
-          customerPhone: orderData.customerPhone,
-          totalPrice: grandTotal,
-          items: orderData.items,
-        }
-      );
-    } catch (whatsappError) {
-      console.error('WhatsApp notification failed (non-blocking):', whatsappError);
-    }
+      // Send WhatsApp notification to business number
+      try {
+        await sendOrderNotification(
+          '+919363475021', // Your WhatsApp number
+          {
+            orderId,
+            customerName: orderData.customerName,
+            customerPhone: orderData.customerPhone,
+            totalPrice: grandTotal,
+            items: orderData.items,
+          }
+        );
+      } catch (whatsappError) {
+        console.error('WhatsApp notification failed (non-blocking):', whatsappError);
+        // Don't fail the order if WhatsApp fails
+      }
 
     return NextResponse.json({
       success: true,
