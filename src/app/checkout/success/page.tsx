@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Package, ArrowRight, Loader2 } from 'lucide-react';
+import { CheckCircle2, Package, ArrowRight, Loader2, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
@@ -12,24 +12,57 @@ function SuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [order, setOrder] = useState<any>(null);
   
-  const sessionId = searchParams.get('session_id');
   const orderId = searchParams.get('order_id');
 
   useEffect(() => {
-    if (!sessionId || !orderId) {
-      router.push('/');
-      return;
+    async function fetchOrder() {
+      if (!orderId) {
+        router.push('/');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`/api/orders/${orderId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setOrder(data);
+        }
+      } catch (error) {
+        console.error('Error fetching order:', error);
+      } finally {
+        setLoading(false);
+      }
     }
-    setLoading(false);
-  }, [sessionId, orderId, router]);
+
+    fetchOrder();
+  }, [orderId, router]);
+
+  const handleWhatsAppNotify = () => {
+    if (!order) return;
+
+    const itemsList = order.items
+      .map((item: any) => {
+        let itemText = `• ${item.name} x${item.quantity}: ₹${item.price * item.quantity}`;
+        if (item.selectedColor) itemText += ` (Color: ${item.selectedColor})`;
+        if (item.selectedSize) itemText += ` (Size: ${item.selectedSize})`;
+        return itemText;
+      })
+      .join('\n');
+
+    const message = `🎉 New Order Confirmed!\n\nOrder ID: ${order.id}\n\nCustomer: ${order.customerName}\nPhone: ${order.customerPhone}\n\nAddress:\n${order.address}\n\nItems:\n${itemsList}\n\nTotal Amount: ₹${order.total}\n\n---\nSD Trends`;
+    
+    const whatsappUrl = `https://wa.me/919363475021?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
 
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-16">
         <Card className="max-w-2xl mx-auto p-8 text-center">
           <Loader2 className="h-16 w-16 mx-auto animate-spin text-primary mb-4" />
-          <p className="text-muted-foreground">Confirming your payment...</p>
+          <p className="text-muted-foreground">Loading your order details...</p>
         </Card>
       </div>
     );
@@ -60,8 +93,19 @@ function SuccessContent() {
               Order ID: <span className="font-mono font-semibold text-foreground">{orderId}</span>
             </p>
           )}
-          <p className="text-sm text-muted-foreground">
-            We&apos;ll send you an update when your order ships. You can also check your order status anytime.
+          <p className="text-sm text-muted-foreground mb-4">
+            We&apos;ll send you an update when your order ships.
+          </p>
+
+          <Button 
+            onClick={handleWhatsAppNotify}
+            className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white gap-2 mt-2"
+          >
+            <MessageCircle className="h-5 w-5" />
+            Send Order Details to WhatsApp
+          </Button>
+          <p className="text-[10px] text-muted-foreground mt-2 italic">
+            Please click the button above to notify us of your order via WhatsApp for faster processing.
           </p>
         </div>
 
@@ -76,9 +120,8 @@ function SuccessContent() {
             <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            <span>Order details sent to your email</span>
+            <span>Order details logged for seller</span>
           </div>
-
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
