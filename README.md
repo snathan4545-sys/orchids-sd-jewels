@@ -6,7 +6,6 @@ Built using:
 - **Frontend**: Next.js (React), styled with modular Vanilla CSS.
 - **Backend**: Flask (Python) REST API serving catalogs, search results, and newsletter subscriptions.
 - **Assets**: Insured-grade, macro-photography generated assets showing fine jewelry items with 1:1 ratios.
-
 ---
 
 ## Getting Started
