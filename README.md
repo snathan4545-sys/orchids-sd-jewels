@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SD Trends Design - Luxury Jewelry Store
+
+SD Trends Design is a premium e-commerce storefront showcasing luxury fine jewelry. This codebase replicates the elegant design and layout principles of the Jubilee Jewelry WooCommerce theme.
+
+Built using:
+- **Frontend**: Next.js (React), styled with modular Vanilla CSS.
+- **Backend**: Flask (Python) REST API serving catalogs, search results, and newsletter subscriptions.
+- **Assets**: Insured-grade, macro-photography generated assets showing fine jewelry items with 1:1 ratios.
+
+---
 
 ## Getting Started
 
-First, run the development server:
+Follow these steps to run both the frontend and backend locally on your system.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
+- **Node.js** (v18 or higher recommended)
+- **Python 3** (v3.8 or higher recommended)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Step 1: Run the Flask Backend API
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Navigate to the `backend` directory:
+   ```bash
+   cd backend
+   ```
+2. Create a virtual environment and activate it:
+   - **Windows (PowerShell)**:
+     ```powershell
+     python -m venv venv
+     .\venv\Scripts\Activate.ps1
+     ```
+   - **macOS / Linux**:
+     ```bash
+     python -m venv venv
+     source venv/bin/activate
+     ```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Start the Flask application:
+   ```bash
+   python app.py
+   ```
+   *The backend will be running on [http://localhost:5000](http://localhost:5000).*
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+### Step 2: Run the Next.js Frontend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Open a new terminal window and navigate to the `frontend` directory:
+   ```bash
+   cd frontend
+   ```
+2. Install npm dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the Next.js dev server:
+   ```bash
+   npm run dev
+   ```
+   *The storefront will be running on [http://localhost:3000](http://localhost:3000).*
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Key Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Luxury Visual Presentation**: Curated color palettes with a toggle to switch between a clean Light Mode and an obsidian-dark Dark Mode.
+2. **Dynamic Hero & Promotional Banners**: Sleek sliding and zoom-on-hover card systems designed to draw attention to high-end collections.
+3. **Interactive Store Context**: Add pieces to your Wishlist or Cart, with live counters updating inside the header immediately.
+4. **AJAX Live Search**: Search input queries the backend directly on change to show matching pieces with images and prices in real-time.
+5. **Product Detail Quick View**: Click the preview icon on any item card to open a modal containing metal options, descriptions, weight specifications, and quantity controls.
+6. **Deal of the Day Countdown**: Highlighted Duchess Tiara necklace featuring an active countdown timer.
+7. **Active Backend Forms**: Newsletter subscription and contact forms save data locally on the Flask server.
