@@ -29,7 +29,7 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
 
   // UPI payment gateway states
-  const [upiId, setUpiId] = useState('mythu2124@oksbi');
+  const [upiId, setUpiId] = useState('deepashreeguna@okhdfcbank');
   const [merchantName, setMerchantName] = useState('SD Trends');
   const [showUpiModal, setShowUpiModal] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState<number | null>(null);
