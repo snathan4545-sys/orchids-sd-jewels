@@ -10,8 +10,8 @@ export interface StoreContextValue {
   wishlist: any[];
   theme: string;
   toggleTheme: () => void;
-  addToCart: (product: any, quantity?: number, metal?: string) => void;
-  removeFromCart: (productId: any, metal: string) => void;
+  addToCart: (product: any, quantity?: number, metal?: string, size?: string | null) => void;
+  removeFromCart: (productId: any, metal: string, size?: string | null) => void;
   clearCart: () => void;
   toggleWishlist: (productId: any) => void;
   activeQuickViewProduct: any;
@@ -89,25 +89,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   };
 
   // Add to Cart
-  const addToCart = (product, quantity = 1, metal = '18k Yellow Gold') => {
+  const addToCart = (product: any, quantity = 1, metal = '18k Yellow Gold', size: string | null = null) => {
     const existingIndex = cart.findIndex(
-      (item) => item.product.id === product.id && item.metal === metal
+      (item) => item.product.id === product.id && item.metal === metal && item.size === size
     );
 
     let newCart = [...cart];
     if (existingIndex > -1) {
       newCart[existingIndex].quantity += quantity;
     } else {
-      newCart.push({ product, quantity, metal });
+      newCart.push({ product, quantity, metal, size });
     }
     saveCartToStorage(newCart);
     showNotification('Added to Cart', product.name, 'success');
   };
 
   // Remove from Cart
-  const removeFromCart = (productId, metal) => {
+  const removeFromCart = (productId: any, metal: string, size: string | null = null) => {
     const newCart = cart.filter(
-      (item) => !(item.product.id === productId && item.metal === metal)
+      (item) => !(item.product.id === productId && item.metal === metal && item.size === size)
     );
     saveCartToStorage(newCart);
   };

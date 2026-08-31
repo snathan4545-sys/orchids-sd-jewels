@@ -33,6 +33,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={20} /> },
     { label: 'Orders', href: '/admin/orders', icon: <ShoppingBag size={20} /> },
     { label: 'Products', href: '/admin/products', icon: <Package size={20} /> },
+    { label: 'Size Master', href: '/admin/sizes', icon: <Layers size={20} /> },
     { label: 'Product Categories', href: '/admin/categories', icon: <List size={20} /> },
     { label: 'Users', href: '/admin/users', icon: <Users size={20} /> },
     { label: 'Services', href: '/admin/services', icon: <Briefcase size={20} /> },

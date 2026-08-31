@@ -29,7 +29,7 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
 
   // UPI payment gateway states
-  const [upiId, setUpiId] = useState('deepashreeguna@okhdfcbank');
+  const [upiId, setUpiId] = useState('mythu2124@oksbi');
   const [merchantName, setMerchantName] = useState('SD Trends');
   const [showUpiModal, setShowUpiModal] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState<number | null>(null);
@@ -96,7 +96,8 @@ export default function CheckoutPage() {
           name: item.product.name,
           price: item.product.price,
           quantity: item.quantity,
-          metal: item.metal
+          metal: item.metal,
+          size: item.size || null
         }))
       };
 
@@ -431,7 +432,10 @@ export default function CheckoutPage() {
                             />
                             <div className={styles.itemBadge}>{item.quantity}</div>
                           </div>
-                          <span className={styles.itemName}>{item.product.name}</span>
+                          <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <span className={styles.itemName}>{item.product.name}</span>
+                            {item.size && <span style={{ fontSize: '0.8rem', color: '#666' }}>Size: {item.size}</span>}
+                          </div>
                         </div>
                         <span className={styles.itemPrice}>₹{item.product.price * item.quantity}</span>
                       </div>

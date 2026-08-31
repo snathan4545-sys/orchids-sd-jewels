@@ -23,6 +23,7 @@ from models import (
     ContactMessage,
     Subscriber,
     FAQ,
+    SizeMaster,
     ProductReview,
 )
 
@@ -168,6 +169,8 @@ def update_product(id):
                     product_id=id, image_url=img_url, display_order=idx
                 )
                 db.session.add(new_img)
+        elif key == "sizes" and isinstance(val, list):
+            product.sizes_json = json.dumps(val)
         elif hasattr(product, key) and key != "images":
             setattr(product, key, val)
             
@@ -452,6 +455,31 @@ def get_mid_banners():
 def get_services():
     services = ServiceCard.query.order_by(ServiceCard.display_order).all()
     return jsonify([s.to_dict() for s in services]), 200
+
+@app.route("/api/sizes", methods=["GET"])
+def get_sizes():
+    sizes = SizeMaster.query.order_by(SizeMaster.id).all()
+    return jsonify([s.to_dict() for s in sizes]), 200
+
+@app.route("/api/sizes", methods=["POST"])
+def add_size():
+    data = request.json
+    if not data or not data.get("name"):
+        return jsonify({"error": "Size name is required"}), 400
+    existing = SizeMaster.query.filter_by(name=data["name"]).first()
+    if existing:
+        return jsonify({"error": "Size already exists"}), 400
+    new_size = SizeMaster(name=data["name"])
+    db.session.add(new_size)
+    db.session.commit()
+    return jsonify(new_size.to_dict()), 201
+
+@app.route("/api/sizes/<int:id>", methods=["DELETE"])
+def delete_size(id):
+    size = SizeMaster.query.get_or_404(id)
+    db.session.delete(size)
+    db.session.commit()
+    return jsonify({"message": "Size deleted successfully"}), 200
 
 
 @app.route("/api/user/profile", methods=["GET"])
@@ -778,8 +806,11 @@ def add_product():
         return jsonify({"error": f"Product ID '{prod_id}' already exists. Please choose a different unique ID."}), 400
 
     new_p = Product(
-        **{k: v for k, v in data.items() if hasattr(Product, k) and k != "images"}
+        **{k: v for k, v in data.items() if hasattr(Product, k) and k not in ("images", "sizes")}
     )
+    if "sizes" in data and isinstance(data["sizes"], list):
+        new_p.sizes_json = json.dumps(data["sizes"])
+        
     db.session.add(new_p)
     if "images" in data and isinstance(data["images"], list):
         for idx, img_url in enumerate(data["images"]):

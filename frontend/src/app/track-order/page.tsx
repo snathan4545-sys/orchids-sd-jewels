@@ -64,8 +64,9 @@ function TrackOrderContent() {
 
   // Timeline logic
   const isOrdered = order !== null;
-  const isVerified = order?.status === 'Processing' || order?.status === 'Shipped';
-  const isShipped = order?.status === 'Shipped';
+  const isVerified = order?.status === 'Processing' || order?.status === 'Shipped' || order?.status === 'Delivered';
+  const isShipped = order?.status === 'Shipped' || order?.status === 'Delivered';
+  const isDelivered = order?.status === 'Delivered';
   const isDeclined = order?.status === 'Declined';
 
   return (
@@ -149,16 +150,33 @@ function TrackOrderContent() {
 
             {/* Step 3: Shipped */}
             {!isDeclined && (
-              <div className={`${styles.timelineItem} ${isShipped ? styles.active : ''}`}>
+              <div className={`${styles.timelineItem} ${isShipped && !isDelivered ? styles.active : ''} ${isDelivered ? styles.completed : ''}`}>
                 <div className={styles.timelineIcon}>
                   <Truck size={24} />
                 </div>
                 <div className={styles.timelineContent}>
-                  <h3 className={styles.timelineTitle}>Shipped</h3>
+                  <h3 className={styles.timelineTitle}>Shipped to your address</h3>
                   <p className={styles.timelineDesc}>
-                    {isShipped 
+                    {isShipped || isDelivered 
                       ? "Your order has been handed over to our delivery partners and is on its way!" 
                       : "Pending shipment."}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Step 4: Delivered */}
+            {!isDeclined && (
+              <div className={`${styles.timelineItem} ${isDelivered ? styles.active : ''}`}>
+                <div className={styles.timelineIcon}>
+                  <Package size={24} />
+                </div>
+                <div className={styles.timelineContent}>
+                  <h3 className={styles.timelineTitle}>Delivered</h3>
+                  <p className={styles.timelineDesc}>
+                    {isDelivered 
+                      ? "Your order has been delivered successfully. Enjoy your jewelry!" 
+                      : "Pending delivery."}
                   </p>
                 </div>
               </div>

@@ -78,6 +78,8 @@ export default function AdminOrdersPage() {
         return <span className={`${styles.badge} ${styles.processing}`}>Verified</span>;
       case 'Shipped':
         return <span className={`${styles.badge} ${styles.processing}`} style={{backgroundColor: '#e0e7ff', color: '#4338ca'}}>Shipped</span>;
+      case 'Delivered':
+        return <span className={`${styles.badge} ${styles.processing}`} style={{backgroundColor: '#dcfce7', color: '#166534'}}>Delivered</span>;
       case 'Declined':
         return <span className={`${styles.badge} ${styles.declined}`}>Declined</span>;
       default:
@@ -142,6 +144,12 @@ export default function AdminOrdersPage() {
           className={`${styles.filterBtn} ${filter === 'shipped' ? styles.activeFilterBtn : ''}`}
         >
           Shipped ({orders.filter(o => o.status === 'Shipped').length})
+        </button>
+        <button 
+          onClick={() => setFilter('delivered')} 
+          className={`${styles.filterBtn} ${filter === 'delivered' ? styles.activeFilterBtn : ''}`}
+        >
+          Delivered ({orders.filter(o => o.status === 'Delivered').length})
         </button>
         <button 
           onClick={() => setFilter('declined')} 
@@ -227,6 +235,17 @@ export default function AdminOrdersPage() {
                           >
                             <ArrowRight size={14} />
                             Ship Order
+                          </button>
+                        )}
+                        {order.status === 'Shipped' && (
+                          <button 
+                            className={styles.verifyBtn}
+                            style={{ backgroundColor: '#166534' }}
+                            disabled={updatingId !== null}
+                            onClick={() => handleUpdateStatus(order.id, 'Delivered')}
+                          >
+                            <Check size={14} />
+                            Mark Delivered
                           </button>
                         )}
                       </div>
@@ -349,6 +368,19 @@ export default function AdminOrdersPage() {
                   >
                     <ArrowRight size={16} />
                     Mark Order as Shipped
+                  </button>
+                </div>
+              )}
+              {selectedOrder.status === 'Shipped' && (
+                <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', borderTop: '1px solid #e2e8f0', paddingTop: '1.25rem' }}>
+                  <button 
+                    className={styles.verifyBtn}
+                    style={{ flex: 1, padding: '0.75rem', justifyContent: 'center', backgroundColor: '#166534' }}
+                    disabled={updatingId !== null}
+                    onClick={() => handleUpdateStatus(selectedOrder.id, 'Delivered')}
+                  >
+                    <Check size={16} />
+                    Mark Order as Delivered
                   </button>
                 </div>
               )}

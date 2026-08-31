@@ -23,9 +23,11 @@ export default function NewProductPage() {
   const [descriptionImagePreview, setDescriptionImagePreview] = useState<string | null>(null);
   
   const [dbCategories, setDbCategories] = useState<any[]>([]);
+  const [dbSizes, setDbSizes] = useState<any[]>([]);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/content/categories`)
+    fetch(`${API_BASE_URL}/content/categories/hierarchy`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
@@ -42,6 +44,13 @@ export default function NewProductPage() {
         }
       })
       .catch(err => console.error("Error fetching categories:", err));
+
+    fetch(`${API_BASE_URL}/sizes`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) setDbSizes(data);
+      })
+      .catch(err => console.error("Error fetching sizes:", err));
   }, []);
 
   const [formData, setFormData] = useState({
@@ -211,6 +220,7 @@ export default function NewProductPage() {
         about_text: formData.about_text,
         shipping_text: formData.shipping_text,
         details_json: JSON.stringify(detailsObj),
+        sizes: selectedSizes,
         images: imageUrls
       };
 
@@ -338,6 +348,36 @@ export default function NewProductPage() {
                 onChange={(val) => setFormData(prev => ({ ...prev, shipping_text: val }))}
                 style={{ backgroundColor: 'white', color: 'black' }}
               />
+            </div>
+          </div>
+          
+          {/* Sizes */}
+          <div className={styles.section}>
+            <h3>Available Sizes</h3>
+            <div className={styles.formGroup}>
+              <label>Select sizes from Size Master for this product:</label>
+              {dbSizes.length === 0 ? (
+                <p style={{ fontSize: '14px', color: '#666' }}>No sizes defined in Size Master. <Link href="/admin/sizes" style={{ textDecoration: 'underline' }}>Add some here.</Link></p>
+              ) : (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+                  {dbSizes.map(s => (
+                    <label key={s.id} style={{ display: 'flex', alignItems: 'center', gap: '5px', background: '#f5f5f5', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>
+                      <input 
+                        type="checkbox"
+                        checked={selectedSizes.includes(s.name)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedSizes(prev => [...prev, s.name]);
+                          } else {
+                            setSelectedSizes(prev => prev.filter(size => size !== s.name));
+                          }
+                        }}
+                      />
+                      <span>{s.name}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 

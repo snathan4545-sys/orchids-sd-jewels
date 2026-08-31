@@ -266,6 +266,7 @@ class Product(db.Model):
     about_text = db.Column(db.Text, nullable=True)
     shipping_text = db.Column(db.Text, nullable=True)
     details_json = db.Column(db.Text, nullable=True)
+    sizes_json = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     images = db.relationship('ProductImage', backref='product', lazy='selectin', cascade="all, delete-orphan")
@@ -280,6 +281,13 @@ class Product(db.Model):
         if self.details_json:
             try:
                 details_obj = json.loads(self.details_json)
+            except:
+                pass
+                
+        sizes = []
+        if self.sizes_json:
+            try:
+                sizes = json.loads(self.sizes_json)
             except:
                 pass
 
@@ -306,6 +314,7 @@ class Product(db.Model):
             'aboutText': self.about_text,
             'shippingText': self.shipping_text,
             'details': details_obj,
+            'sizes': sizes,
             'images': [img.image_url for img in sorted(self.images, key=lambda x: x.display_order)],
             'image': self.images[0].image_url if self.images else '',
             'color': self.color,
@@ -319,6 +328,18 @@ class ProductImage(db.Model):
     product_id = db.Column(db.String(100), db.ForeignKey('sd_products.id'), nullable=False)
     image_url = db.Column(db.String(500), nullable=False)
     display_order = db.Column(db.Integer, default=0)
+
+class SizeMaster(db.Model):
+    __tablename__ = 'sd_size_master'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False, unique=True)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
 
 class SiteSetting(db.Model):
     __tablename__ = 'sd_site_settings'

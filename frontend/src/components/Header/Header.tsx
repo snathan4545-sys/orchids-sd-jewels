@@ -271,7 +271,7 @@ export default function Header({ categories = [], promo = null }: HeaderProps) {
                   <div className={styles.cartList}>
                     {cart.length > 0 ? (
                       cart.map((item, idx) => (
-                        <div key={`${item.product.id}-${item.metal}-${idx}`} className={styles.cartDropdownItem}>
+                        <div key={`${item.product.id}-${item.metal}-${item.size}-${idx}`} className={styles.cartDropdownItem}>
                           <img 
                             src={item.product.images[0]} 
                             alt={item.product.name} 
@@ -280,14 +280,14 @@ export default function Header({ categories = [], promo = null }: HeaderProps) {
                           <div className={styles.cartItemDetails}>
                             <div className={styles.cartItemName}>{item.product.name}</div>
                             <div className={styles.cartItemMeta}>
-                              Qty: {item.quantity} | {item.metal.split(' ')[0]}
+                              Qty: {item.quantity} | {item.metal.split(' ')[0]} {item.size && ` | Size: ${item.size}`}
                             </div>
                             <div className={styles.cartItemPrice}>₹{item.product.price * item.quantity}
                             </div>
                           </div>
                           <button 
                             className={styles.removeCartItem}
-                            onClick={() => removeFromCart(item.product.id, item.metal)}
+                            onClick={() => removeFromCart(item.product.id, item.metal, item.size)}
                             aria-label="Remove item"
                           >
                             <Trash2 size={14} />

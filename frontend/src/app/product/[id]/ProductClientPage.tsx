@@ -42,6 +42,7 @@ export default function ProductClientPage({ productId }: ProductClientPageProps)
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [isZooming, setIsZooming] = useState(false);
   const [zoomStyle, setZoomStyle] = useState<{backgroundPosition?: string}>({});
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   const [toastMsg, setToastMsg] = useState('');
   const [allProducts, setAllProducts] = useState<any[]>([]);
@@ -98,6 +99,9 @@ export default function ProductClientPage({ productId }: ProductClientPageProps)
           const found = data.find(p => p.id === productId);
           if (found) {
             setProduct(found);
+            if (found.sizes && found.sizes.length > 0) {
+              setSelectedSize(found.sizes[0]);
+            }
             setLoading(false);
             return;
           }
@@ -110,6 +114,9 @@ export default function ProductClientPage({ productId }: ProductClientPageProps)
       const localFound = PRODUCTS.find(p => p.id === productId);
       if (localFound) {
         setProduct(localFound);
+        if (localFound.sizes && localFound.sizes.length > 0) {
+          setSelectedSize(localFound.sizes[0]);
+        }
       }
       setLoading(false);
     }
@@ -208,15 +215,27 @@ export default function ProductClientPage({ productId }: ProductClientPageProps)
 
   const handleAddToCartSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addToCart(product, quantity);
+    if (product?.sizes?.length && !selectedSize) {
+      alert("Please select a size first.");
+      return;
+    }
+    addToCart(product, quantity, '18k Yellow Gold', selectedSize);
   };
 
   const handleAddToCartClick = () => {
-    addToCart(product, quantity);
+    if (product?.sizes?.length && !selectedSize) {
+      alert("Please select a size first.");
+      return;
+    }
+    addToCart(product, quantity, '18k Yellow Gold', selectedSize);
   };
 
   const handleBuyNow = () => {
-    addToCart(product, quantity);
+    if (product?.sizes?.length && !selectedSize) {
+      alert("Please select a size first.");
+      return;
+    }
+    addToCart(product, quantity, '18k Yellow Gold', selectedSize);
     router.push('/checkout');
   };
 
@@ -394,6 +413,31 @@ export default function ProductClientPage({ productId }: ProductClientPageProps)
                       >
                         {v.color || 'Other'}
                       </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {product.sizes && product.sizes.length > 0 && (
+                <div style={{ marginBottom: '20px' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px' }}>Select Size:</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {product.sizes.map((s: string) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setSelectedSize(s)}
+                        style={{
+                          padding: '8px 16px',
+                          border: selectedSize === s ? '2px solid #000' : '1px solid #ddd',
+                          borderRadius: '4px',
+                          background: selectedSize === s ? '#fff' : '#f9f9f9',
+                          fontWeight: selectedSize === s ? 600 : 400,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {s}
+                      </button>
                     ))}
                   </div>
                 </div>
