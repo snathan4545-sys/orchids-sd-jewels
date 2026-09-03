@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, X, Upload, User } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Upload, User, Star } from 'lucide-react';
 import styles from './Testimonials.module.css';
 import { useStore } from '../../context/StoreContext';
 import { supabase } from '../../utils/supabase';
@@ -176,8 +176,13 @@ export default function Testimonials({ testimonials: initialTestimonials = [] }:
                       </div>
                     ) : (
                       <div className={styles.card}>
-                        <h3 className={styles.cardTitle}>{item.title}</h3>
-                        <p className={styles.quoteText}>{item.quote}</p>
+                        <div className={styles.ratingRow}>
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} size={15} className={styles.starIcon} fill="#D4AF37" color="#D4AF37" />
+                          ))}
+                        </div>
+                        {item.title && <h3 className={styles.cardTitle}>{item.title}</h3>}
+                        <p className={styles.quoteText}>"{item.quote}"</p>
                         <div className={styles.authorBlock}>
                           <div className={styles.avatarWrapper}>
                             {item.image_url ? (
@@ -195,18 +200,18 @@ export default function Testimonials({ testimonials: initialTestimonials = [] }:
                             ) : null}
                             {(!item.image_url) && (
                               <div className={styles.defaultAvatarIcon}>
-                                <User size={24} />
+                                <User size={20} />
                               </div>
                             )}
                             {item.image_url && (
                               <div className={styles.defaultAvatarIcon} style={{ display: 'none' }}>
-                                <User size={24} />
+                                <User size={20} />
                               </div>
                             )}
                           </div>
                           <div className={styles.authorInfo}>
-                            <span className={styles.authorName}>{item.author}</span>
-                            <span className={styles.authorRole}>{item.role}</span>
+                            <span className={styles.authorName}>{item.author || 'Verified Customer'}</span>
+                            {item.role && <span className={styles.authorRole}>{item.role}</span>}
                           </div>
                         </div>
                       </div>
