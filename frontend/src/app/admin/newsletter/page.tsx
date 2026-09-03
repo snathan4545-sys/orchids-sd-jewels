@@ -84,9 +84,30 @@ export default function NewsletterPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h2>Newsletter Campaign</h2>
-        <p className={styles.description}>Select products and send a custom email template to all your subscribers.</p>
+      <div className={styles.header} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h2>Newsletter Campaign</h2>
+          <p className={styles.description}>Select products and send a custom email template to all your subscribers.</p>
+        </div>
+        <a 
+          href="/admin/footer" 
+          style={{ 
+            display: 'inline-flex', 
+            alignItems: 'center', 
+            gap: '0.5rem', 
+            padding: '0.6rem 1.2rem', 
+            backgroundColor: 'var(--bg-secondary, #f3f4f6)', 
+            color: 'var(--text-primary, #1f2937)', 
+            borderRadius: '6px', 
+            fontSize: '0.88rem', 
+            fontWeight: 500,
+            border: '1px solid var(--border-color, #e5e7eb)',
+            textDecoration: 'none'
+          }}
+        >
+          <ImageIcon size={16} />
+          Edit Newsletter Banner Content & Image
+        </a>
       </div>
 
       <div className={styles.layout}>

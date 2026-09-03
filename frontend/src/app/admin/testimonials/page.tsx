@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Edit2, Trash2, CheckCircle, XCircle } from 'lucide-react';
+import { Plus, Edit2, Trash2, CheckCircle, XCircle, User } from 'lucide-react';
 import styles from '../products/AdminProducts.module.css';
 import { API_BASE_URL, BASE_URL } from '@/config';
 
@@ -98,7 +98,9 @@ export default function AdminTestimonialsPage() {
                     {t.image_url ? (
                       <img src={t.image_url} alt={t.author} className={styles.productThumbnail} style={{ borderRadius: '50%' }} />
                     ) : (
-                      <div className={styles.noImageThumbnail} style={{ borderRadius: '50%' }}>No Img</div>
+                      <div className={styles.noImageThumbnail} style={{ borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <User size={18} color="#888" />
+                      </div>
                     )}
                   </td>
                   <td>

@@ -25,6 +25,9 @@ export default function Footer({ settings: initialSettings = {}, footerLinks: in
     footer_address: '',
     footer_phone: '',
     footer_email: '',
+    newsletter_title: '',
+    newsletter_subtitle: '',
+    newsletter_bg_image: '',
   });
   const [fetchedLinks, setFetchedLinks] = useState<any[]>([]);
 
@@ -41,6 +44,9 @@ export default function Footer({ settings: initialSettings = {}, footerLinks: in
           footer_address: data.footer_address || '',
           footer_phone: data.footer_phone || '',
           footer_email: data.footer_email || '',
+          newsletter_title: data.newsletter_title || '',
+          newsletter_subtitle: data.newsletter_subtitle || '',
+          newsletter_bg_image: data.newsletter_bg_image || '',
         });
       }
       if (linksRes.ok) {
@@ -95,6 +101,9 @@ export default function Footer({ settings: initialSettings = {}, footerLinks: in
     footer_address: initialSettings.footer_address || fetchedSettings.footer_address || '',
     footer_phone: initialSettings.footer_phone || fetchedSettings.footer_phone || '',
     footer_email: initialSettings.footer_email || fetchedSettings.footer_email || '',
+    newsletter_title: initialSettings.newsletter_title || fetchedSettings.newsletter_title || 'Subscribe To Our Newsletter',
+    newsletter_subtitle: initialSettings.newsletter_subtitle || fetchedSettings.newsletter_subtitle || 'Subscribe to our latest newsletter to get news about special discounts.',
+    newsletter_bg_image: initialSettings.newsletter_bg_image || fetchedSettings.newsletter_bg_image || '',
   };
 
   const links = initialLinks.length > 0 ? initialLinks : fetchedLinks;
@@ -107,13 +116,15 @@ export default function Footer({ settings: initialSettings = {}, footerLinks: in
   return (
     <footer id="newsletter" className={styles.footer}>
       {/* Upper Newsletter Subscription */}
-      <div className={styles.newsletterSection}>
+      <div 
+        className={styles.newsletterSection}
+        style={settings.newsletter_bg_image ? { backgroundImage: `url("${settings.newsletter_bg_image}")` } : undefined}
+      >
         <div className={styles.newsletterContainer}>
           <div className={styles.newsletterLeft}>
-            <h2 className={styles.newsTitle}>Subscribe To Our Newsletter</h2>
+            <h2 className={styles.newsTitle}>{settings.newsletter_title}</h2>
             <p className={styles.newsSubtitle}>
-              Subscribe to our latest newsletter to get news about special
-              discounts.
+              {settings.newsletter_subtitle}
             </p>
             <form className={styles.form} onSubmit={handleSubscribe}>
               <input

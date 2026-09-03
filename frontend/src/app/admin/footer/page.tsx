@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Save, Plus, Edit2, Trash2, X } from 'lucide-react';
+import { Save, Plus, Edit2, Trash2, X, Upload } from 'lucide-react';
 import styles from './FooterAdmin.module.css';
 import { API_BASE_URL, BASE_URL } from '@/config';
+import { supabase } from '../../../utils/supabase';
 
 
 export default function AdminFooterPage() {
-  const [activeTab, setActiveTab] = useState<'settings' | 'links'>('settings');
+  const [activeTab, setActiveTab] = useState<'settings' | 'newsletter' | 'links'>('settings');
   const [loading, setLoading] = useState(true);
 
   // Settings State
@@ -15,9 +16,13 @@ export default function AdminFooterPage() {
     footer_about_text: '',
     footer_address: '',
     footer_phone: '',
-    footer_email: ''
+    footer_email: '',
+    newsletter_title: '',
+    newsletter_subtitle: '',
+    newsletter_bg_image: ''
   });
   const [savingSettings, setSavingSettings] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // Links State
   const [links, setLinks] = useState<any[]>([]);
@@ -50,7 +55,10 @@ export default function AdminFooterPage() {
           footer_about_text: data.footer_about_text || '',
           footer_address: data.footer_address || '',
           footer_phone: data.footer_phone || '',
-          footer_email: data.footer_email || ''
+          footer_email: data.footer_email || '',
+          newsletter_title: data.newsletter_title || 'Subscribe To Our Newsletter',
+          newsletter_subtitle: data.newsletter_subtitle || 'Subscribe to our latest newsletter to get news about special discounts.',
+          newsletter_bg_image: data.newsletter_bg_image || '/images/newsletter_background.png'
         });
       }
 
@@ -81,6 +89,34 @@ export default function AdminFooterPage() {
       alert('Error saving settings.');
     } finally {
       setSavingSettings(false);
+    }
+  };
+
+  const handleBannerImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `newsletter_banner_${Date.now()}.${fileExt}`;
+      const filePath = `banners/${fileName}`;
+
+      try {
+        setUploadingImage(true);
+        const { error: uploadError } = await supabase.storage
+          .from('sd_assets')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('sd_assets')
+          .getPublicUrl(filePath);
+
+        setSettings(prev => ({ ...prev, newsletter_bg_image: publicUrl }));
+      } catch (err: any) {
+        alert('Failed to upload banner image: ' + (err.message || 'Unknown error'));
+      } finally {
+        setUploadingImage(false);
+      }
     }
   };
 
@@ -151,8 +187,8 @@ export default function AdminFooterPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2>Footer Setup</h2>
-        <p className={styles.description}>Manage global footer text, contact information, and navigation links.</p>
+        <h2>Footer & Newsletter Setup</h2>
+        <p className={styles.description}>Manage global footer text, contact information, newsletter banner, and navigation links.</p>
       </div>
 
       <div className={styles.tabs}>
@@ -161,6 +197,12 @@ export default function AdminFooterPage() {
           onClick={() => setActiveTab('settings')}
         >
           Contact & About Info
+        </button>
+        <button 
+          className={`${styles.tabBtn} ${activeTab === 'newsletter' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('newsletter')}
+        >
+          Newsletter Banner
         </button>
         <button 
           className={`${styles.tabBtn} ${activeTab === 'links' ? styles.activeTab : ''}`}
@@ -215,6 +257,73 @@ export default function AdminFooterPage() {
           <button type="submit" className={styles.saveBtn} disabled={savingSettings}>
             <Save size={18} />
             {savingSettings ? 'Saving...' : 'Save Settings'}
+          </button>
+        </form>
+      )}
+
+      {activeTab === 'newsletter' && (
+        <form onSubmit={handleSaveSettings} className={styles.settingsForm}>
+          <div className={styles.card}>
+            <h3>Newsletter Subscription Banner</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '1.25rem' }}>
+              Configure the headline title, subtitle, and background banner image for the Newsletter subscription section shown in the site footer.
+            </p>
+            
+            <div className={styles.formGroup}>
+              <label>Banner Headline / Title</label>
+              <input 
+                type="text" 
+                value={settings.newsletter_title}
+                onChange={e => setSettings({...settings, newsletter_title: e.target.value})}
+                placeholder="e.g. Subscribe To Our Newsletter"
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Banner Subtitle / Description</label>
+              <textarea 
+                rows={3}
+                value={settings.newsletter_subtitle}
+                onChange={e => setSettings({...settings, newsletter_subtitle: e.target.value})}
+                placeholder="e.g. Subscribe to our latest newsletter to get news about special discounts."
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Banner Background Image</label>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginBottom: '0.75rem' }}>
+                <input 
+                  type="text" 
+                  value={settings.newsletter_bg_image}
+                  onChange={e => setSettings({...settings, newsletter_bg_image: e.target.value})}
+                  placeholder="/images/newsletter_background.png or https://..."
+                  style={{ flex: 1 }}
+                />
+                <label className={styles.addBtn} style={{ cursor: 'pointer', margin: 0, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  <Upload size={16} />
+                  {uploadingImage ? 'Uploading...' : 'Upload Image'}
+                  <input type="file" accept="image/*" onChange={handleBannerImageUpload} style={{ display: 'none' }} disabled={uploadingImage} />
+                </label>
+              </div>
+
+              {settings.newsletter_bg_image && (
+                <div style={{ marginTop: '0.5rem', border: '1px solid var(--border-color)', borderRadius: '8px', overflow: 'hidden', maxHeight: '180px', position: 'relative', background: '#f5f5f5' }}>
+                  <img 
+                    src={settings.newsletter_bg_image} 
+                    alt="Newsletter Banner Preview" 
+                    style={{ width: '100%', height: '180px', objectFit: 'cover' }} 
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <button type="submit" className={styles.saveBtn} disabled={savingSettings || uploadingImage}>
+            <Save size={18} />
+            {savingSettings ? 'Saving Banner Settings...' : 'Save Banner Settings'}
           </button>
         </form>
       )}

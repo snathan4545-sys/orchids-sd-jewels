@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, X, Upload } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Upload, User } from 'lucide-react';
 import styles from './Testimonials.module.css';
 import { useStore } from '../../context/StoreContext';
 import { supabase } from '../../utils/supabase';
@@ -180,11 +180,29 @@ export default function Testimonials({ testimonials: initialTestimonials = [] }:
                         <p className={styles.quoteText}>{item.quote}</p>
                         <div className={styles.authorBlock}>
                           <div className={styles.avatarWrapper}>
-                            <img
-                              src={item.image_url}
-                              alt={item.author}
-                              className={styles.avatar}
-                            />
+                            {item.image_url ? (
+                              <img
+                                src={item.image_url}
+                                alt={item.author || 'User'}
+                                className={styles.avatar}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                  if (e.currentTarget.nextElementSibling) {
+                                    (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'flex';
+                                  }
+                                }}
+                              />
+                            ) : null}
+                            {(!item.image_url) && (
+                              <div className={styles.defaultAvatarIcon}>
+                                <User size={24} />
+                              </div>
+                            )}
+                            {item.image_url && (
+                              <div className={styles.defaultAvatarIcon} style={{ display: 'none' }}>
+                                <User size={24} />
+                              </div>
+                            )}
                           </div>
                           <div className={styles.authorInfo}>
                             <span className={styles.authorName}>{item.author}</span>
