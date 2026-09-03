@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useStore } from '../../context/StoreContext';
-import { Search, Heart, ShoppingCart, User, ChevronDown, Sun, Moon, Menu, X, Trash2 } from 'lucide-react';
+import { Search, Heart, ShoppingCart, User, ChevronDown, ChevronRight, Sun, Moon, Menu, X, Trash2 } from 'lucide-react';
 import styles from './Header.module.css';
 import { API_BASE_URL, BASE_URL } from '@/config';
 
@@ -82,6 +82,9 @@ export default function Header({ categories = [], promo = null }: HeaderProps) {
   const cartTotalItems = cart.reduce((total, item) => total + item.quantity, 0);
   const cartTotalPrice = cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
 
+  // Check if any category has subcategories
+  const hasSubcategories = categories.some(cat => cat.subcategories && cat.subcategories.length > 0);
+
   return (
     <header className={styles.header}>
       {/* Top Announcement Bar */}
@@ -144,29 +147,54 @@ export default function Header({ categories = [], promo = null }: HeaderProps) {
                 <Link href="/shop" className={styles.navLink}>
                   CATEGORIES <span className={styles.saleBadge}>SALE</span> <ChevronDown size={14} className={styles.chevron} />
                 </Link>
-                {/* Mega Dropdown menu */}
-                <div className={styles.megaDropdown}>
-                  <div className={styles.megaDropdownContainer}>
-                    {categories.map((cat, idx) => (
-                      <div key={cat.id} className={styles.megaColumn}>
-                        <h3 className={styles.megaTitle}>
-                          <Link href={`/shop?category=${encodeURIComponent(cat.name)}`}>
-                            {cat.name}
-                          </Link>
-                        </h3>
-                        <ul className={styles.megaList}>
-                          {cat.subcategories?.map((sub: any) => (
-                            <li key={sub.id}>
-                              <Link href={`/shop?subcategory=${encodeURIComponent(sub.name)}`}>
-                                {sub.name}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
+                {/* Dropdown Menu: Compact Popover if no subcategories exist, Mega Menu if subcategories exist */}
+                {!hasSubcategories ? (
+                  <div className={styles.compactDropdown}>
+                    <div className={styles.compactHeader}>
+                      <span className={styles.compactTitle}>BROWSE COLLECTIONS</span>
+                      <Link href="/shop" className={styles.compactViewAll}>
+                        View All <ChevronRight size={13} />
+                      </Link>
+                    </div>
+                    <div className={styles.compactGrid}>
+                      {categories.map((cat) => (
+                        <Link
+                          key={cat.id}
+                          href={`/shop?category=${encodeURIComponent(cat.name)}`}
+                          className={styles.compactCategoryCard}
+                        >
+                          <span className={styles.compactCategoryName}>{cat.name}</span>
+                          <ChevronRight size={14} className={styles.compactCategoryArrow} />
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className={styles.megaDropdown}>
+                    <div className={styles.megaDropdownContainer}>
+                      {categories.map((cat, idx) => (
+                        <div key={cat.id} className={styles.megaColumn}>
+                          <h3 className={styles.megaTitle}>
+                            <Link href={`/shop?category=${encodeURIComponent(cat.name)}`}>
+                              {cat.name}
+                            </Link>
+                          </h3>
+                          {cat.subcategories && cat.subcategories.length > 0 && (
+                            <ul className={styles.megaList}>
+                              {cat.subcategories.map((sub: any) => (
+                                <li key={sub.id}>
+                                  <Link href={`/shop?subcategory=${encodeURIComponent(sub.name)}`}>
+                                    {sub.name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </li>
               <li>
                 <Link href="/top-deals" className={`${styles.navLink} ${pathname === '/top-deals' ? styles.activeNavLink : ''}`}>
