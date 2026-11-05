@@ -9,38 +9,70 @@ import { API_BASE_URL, BASE_URL } from '@/config';
 
 export default function OrderStatusPage() {
   const [order, setOrder] = useState<any | null>(null);
+  const [paymentInfo, setPaymentInfo] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Read order_id safely in client-side useEffect to prevent Suspense issues
     const params = new URLSearchParams(window.location.search);
-    const orderId = params.get('order_id');
+    let orderIdStr = params.get('order_id');
 
-    if (!orderId) {
+    if (!orderIdStr) {
       setError("No Order ID provided in URL parameters.");
       setLoading(false);
       return;
     }
 
-    const fetchOrder = async () => {
+    // Extract numeric order_id if passed as Cashfree format e.g., CF_ORD_12_1700000
+    let numericOrderId = orderIdStr;
+    if (orderIdStr.startsWith('CF_ORD_')) {
+      const parts = orderIdStr.split('_');
+      if (parts.length >= 3) {
+        numericOrderId = parts[2];
+      }
+    }
+
+    const verifyAndFetchOrder = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/orders/${orderId}`);
-        if (res.ok) {
-          const data = await res.json();
-          setOrder(data);
+        // Step 1: Query backend payment status API
+        const payRes = await fetch(`${API_BASE_URL}/payments/${numericOrderId}/status`);
+        let payData = null;
+        if (payRes.ok) {
+          payData = await payRes.json();
+          setPaymentInfo(payData);
+        }
+
+        // Step 2: Query order details API
+        const orderRes = await fetch(`${API_BASE_URL}/orders/${numericOrderId}`);
+        if (orderRes.ok) {
+          const orderData = await orderRes.json();
+          setOrder(orderData);
         } else {
-          setError(`Order #${orderId} was not found on the server.`);
+          setError(`Order #${numericOrderId} was not found on the server.`);
         }
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching order status:", err);
         setError("Failed to connect to backend server.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchOrder();
+    verifyAndFetchOrder();
+
+    // Auto poll up to 3 times if status is PENDING
+    const interval = setInterval(() => {
+      verifyAndFetchOrder();
+    }, 4000);
+
+    const timer = setTimeout(() => {
+      clearInterval(interval);
+    }, 12000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timer);
+    };
   }, []);
 
   if (loading) {
@@ -86,9 +118,10 @@ export default function OrderStatusPage() {
     );
   }
 
-  const isSuccess = order.status === 'Processing' || order.status === 'Completed';
-  const isDeclined = order.status === 'Declined';
-  const isPending = order.status === 'Pending Verification' || order.status === 'Pending';
+  const actualStatus = paymentInfo?.payment_status || (order.status === 'Processing' || order.status === 'Completed' ? 'SUCCESS' : order.status);
+  const isSuccess = actualStatus === 'SUCCESS' || order.status === 'Processing' || order.status === 'Completed';
+  const isDeclined = actualStatus === 'FAILED' || actualStatus === 'CANCELLED' || order.status === 'Declined';
+  const isPending = !isSuccess && !isDeclined;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>

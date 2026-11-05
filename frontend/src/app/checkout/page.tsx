@@ -6,6 +6,7 @@ import { useStore } from '../../context/StoreContext';
 import { ChevronRight, Check, ShieldCheck, CreditCard, ShoppingBag, CheckCircle, Copy, X } from 'lucide-react';
 import styles from './checkout.module.css';
 import { API_BASE_URL, BASE_URL } from '@/config';
+import { initiateCashfreeCheckout } from '@/services/paymentService';
 
 
 export default function CheckoutPage() {
@@ -23,7 +24,7 @@ export default function CheckoutPage() {
 
   // Checkout states
   const [shippingOption, setShippingOption] = useState<'free' | 'pickup' | 'flat'>('free');
-  const [paymentMethod, setPaymentMethod] = useState<'bank' | 'cod' | 'upi'>('upi');
+  const [paymentMethod, setPaymentMethod] = useState<'cashfree' | 'upi'>('cashfree');
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
   const [validationError, setValidationError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -90,8 +91,8 @@ export default function CheckoutPage() {
         state: state,
         pincode: postcode,
         total_amount: cartTotal,
-        status: paymentMethod === 'upi' ? 'Pending' : 'Pending Verification',
-        payment_method: paymentMethod === 'upi' ? 'UPI' : 'Direct Bank Transfer',
+        status: 'Pending',
+        payment_method: paymentMethod === 'cashfree' ? 'Cashfree Payments' : 'UPI Direct',
         items: cart.map(item => ({
           name: item.product.name,
           price: item.product.price,
@@ -114,26 +115,33 @@ export default function CheckoutPage() {
       const orderData = await res.json();
       const newOrderId = orderData.id;
 
-      if (paymentMethod === 'upi') {
+      if (paymentMethod === 'cashfree') {
+        try {
+          await initiateCashfreeCheckout(newOrderId);
+          clearCart();
+          return;
+        } catch (cfErr: any) {
+          console.error("Cashfree Checkout error:", cfErr);
+          setValidationError(cfErr.message || "Failed to launch Cashfree payment gateway. Please try again.");
+          setSubmitting(false);
+          return;
+        }
+      } else if (paymentMethod === 'upi') {
         setCurrentOrderId(newOrderId);
-        // Construct deep link: upi://pay?pa=yourupi@oksbi&pn=Karthik%20Store&am=499&cu=INR&tn=Order12345
         const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(merchantName)}&am=${cartTotal}&cu=INR&tn=${encodeURIComponent('Order ' + newOrderId)}`;
         
-        // Check if user is on mobile
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         if (isMobile) {
-          // Open UPI app directly
           window.location.href = upiUrl;
         }
-        // Show QR code / instructions modal on desktop, or as a fallback/confirmation on mobile
         setShowUpiModal(true);
       } else {
         setIsOrderPlaced(true);
         clearCart();
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setValidationError('An error occurred while placing the order. Please try again.');
+      setValidationError(err.message || 'An error occurred while placing the order. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -462,17 +470,44 @@ export default function CheckoutPage() {
 
                   {/* Payment Gateway Details */}
                   <div className={styles.paymentSection}>
-                    <p style={{ fontWeight: 600, fontSize: '0.95rem', margin: '0 0 0.5rem 0', color: 'var(--text-primary)' }}>
-                      UPI Payment (Google Pay, PhonePe, Paytm, BHIM, etc.)
+                    <p style={{ fontWeight: 600, fontSize: '0.95rem', margin: '0 0 0.75rem 0', color: 'var(--text-primary)' }}>
+                      Select Payment Method
                     </p>
-                    <p className={styles.paymentDesc} style={{ margin: 0 }}>
-                      Pay seamlessly using any UPI app. Scan the QR code or pay directly with deep links (zero payment gateway commission).
-                    </p>
+                    
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '12px', border: paymentMethod === 'cashfree' ? '2px solid #ce967e' : '1px solid #e2e8f0', borderRadius: '8px', cursor: 'pointer', marginBottom: '12px', backgroundColor: paymentMethod === 'cashfree' ? '#fdf8f6' : '#ffffff' }}>
+                      <input 
+                        type="radio" 
+                        name="paymentMethod" 
+                        value="cashfree" 
+                        checked={paymentMethod === 'cashfree'} 
+                        onChange={() => setPaymentMethod('cashfree')}
+                        style={{ marginTop: '3px' }}
+                      />
+                      <div>
+                        <strong style={{ display: 'block', fontSize: '0.9rem', color: '#1a1a1a' }}>Cashfree Secure Payments (Recommended)</strong>
+                        <span style={{ fontSize: '0.8rem', color: '#666666' }}>Credit/Debit Cards, NetBanking, UPI (GPay, PhonePe, Paytm), & Wallets</span>
+                      </div>
+                    </label>
+
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '12px', border: paymentMethod === 'upi' ? '2px solid #ce967e' : '1px solid #e2e8f0', borderRadius: '8px', cursor: 'pointer', backgroundColor: paymentMethod === 'upi' ? '#fdf8f6' : '#ffffff' }}>
+                      <input 
+                        type="radio" 
+                        name="paymentMethod" 
+                        value="upi" 
+                        checked={paymentMethod === 'upi'} 
+                        onChange={() => setPaymentMethod('upi')}
+                        style={{ marginTop: '3px' }}
+                      />
+                      <div>
+                        <strong style={{ display: 'block', fontSize: '0.9rem', color: '#1a1a1a' }}>Direct UPI QR / App Link</strong>
+                        <span style={{ fontSize: '0.8rem', color: '#666666' }}>Scan UPI QR code or pay directly with deep links</span>
+                      </div>
+                    </label>
                   </div>
 
                   {/* Place Order CTA */}
-                  <button type="submit" className={styles.placeOrderBtn}>
-                    Pay Now via UPI
+                  <button type="submit" className={styles.placeOrderBtn} disabled={submitting}>
+                    {submitting ? 'Processing Payment...' : paymentMethod === 'cashfree' ? 'Pay Now via Cashfree' : 'Pay Now via UPI'}
                   </button>
 
                 </div>

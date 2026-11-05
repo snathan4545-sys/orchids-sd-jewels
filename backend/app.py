@@ -25,7 +25,9 @@ from models import (
     FAQ,
     SizeMaster,
     ProductReview,
+    Payment,
 )
+from routers.payments import payments_bp
 
 # Load environment variables from .env file
 load_dotenv()
@@ -63,6 +65,16 @@ else:
 app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
+
+# Register Cashfree payments blueprint
+app.register_blueprint(payments_bp)
+
+with app.app_context():
+    try:
+        db.create_all()
+    except Exception as e:
+        print("db.create_all() exception:", e)
+
 
 import time
 _cache = {}

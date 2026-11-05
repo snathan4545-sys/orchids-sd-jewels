@@ -72,13 +72,13 @@ export default function EditTestimonialPage() {
     const filePath = `testimonials/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
-      .from('sd-trends-images')
+      .from('sd_assets')
       .upload(filePath, file);
 
     if (uploadError) throw uploadError;
 
     const { data } = supabase.storage
-      .from('sd-trends-images')
+      .from('sd_assets')
       .getPublicUrl(filePath);
 
     return data.publicUrl;

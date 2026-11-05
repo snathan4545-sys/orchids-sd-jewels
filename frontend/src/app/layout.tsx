@@ -15,13 +15,11 @@ const roboto = Roboto({
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
   variable: "--font-playfair-display",
 });
 
 const oswald = Oswald({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-oswald",
 });
 

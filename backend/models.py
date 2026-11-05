@@ -473,3 +473,42 @@ class ProductReview(db.Model):
         }
 
 
+class Payment(db.Model):
+    __tablename__ = 'sd_payments'
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('sd_orders.id'), nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('sd_users.id'), nullable=True)
+    cashfree_order_id = db.Column(db.String(100), unique=True, index=True, nullable=False)
+    cashfree_payment_id = db.Column(db.String(100), nullable=True)
+    payment_session_id = db.Column(db.String(255), nullable=True)
+    amount = db.Column(db.Float, nullable=False)
+    currency = db.Column(db.String(10), default='INR')
+    status = db.Column(db.String(50), default='PENDING', index=True) # PENDING, SUCCESS, FAILED, CANCELLED, REFUNDED, PARTIALLY_REFUNDED
+    payment_method = db.Column(db.String(100), nullable=True)
+    gateway = db.Column(db.String(50), default='CASHFREE')
+    gateway_response = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    order = db.relationship('Order', backref=db.backref('payments', lazy=True, cascade='all, delete-orphan'))
+    user = db.relationship('User', backref=db.backref('payments', lazy=True))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'order_id': self.order_id,
+            'user_id': self.user_id,
+            'cashfree_order_id': self.cashfree_order_id,
+            'cashfree_payment_id': self.cashfree_payment_id,
+            'payment_session_id': self.payment_session_id,
+            'amount': self.amount,
+            'currency': self.currency,
+            'status': self.status,
+            'payment_method': self.payment_method,
+            'gateway': self.gateway,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+
+
+

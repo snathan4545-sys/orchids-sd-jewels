@@ -24,7 +24,7 @@ export default function PaymentSetupPage() {
       const res = await fetch(`${API_BASE_URL}/settings`);
       if (res.ok) {
         const data = await res.json();
-        setSettings({
+        setSettings({ 
           upi_id: data.upi_id || 'mythu2124@oksbi',
           upi_merchant_name: data.upi_merchant_name || 'SD Trends'
         });

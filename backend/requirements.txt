@@ -4,3 +4,4 @@ Flask-SQLAlchemy==3.1.1
 pg8000
 python-dotenv
 gunicorn
+requests==2.34.2
