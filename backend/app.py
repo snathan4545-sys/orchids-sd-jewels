@@ -66,7 +66,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
-# Register Cashfree payments blueprint
+# Register Razorpay payments blueprint
 app.register_blueprint(payments_bp)
 
 with app.app_context():
@@ -417,7 +417,7 @@ def get_categories_hierarchy():
 
 @app.route("/api/content/hero", methods=["GET"])
 def get_hero():
-    slides = HeroSlide.query.order_by(HeroSlide.id).all()
+    slides = HeroSlide.query.order_by(HeroSlide.display_order, HeroSlide.id).all()
     return jsonify([s.to_dict() for s in slides]), 200
 
 
@@ -517,6 +517,7 @@ def update_hero(id):
     if request.method == "DELETE":
         db.session.delete(slide)
         db.session.commit()
+        _cache.clear()
         return jsonify({"message": "Deleted"}), 200
 
     data = request.json
@@ -524,6 +525,7 @@ def update_hero(id):
         if hasattr(slide, key):
             setattr(slide, key, val)
     db.session.commit()
+    _cache.clear()
     return jsonify(slide.to_dict()), 200
 
 
@@ -542,6 +544,7 @@ def add_hero():
     )
     db.session.add(new_slide)
     db.session.commit()
+    _cache.clear()
     return jsonify(new_slide.to_dict()), 201
 
 
@@ -1223,6 +1226,7 @@ def api_settings():
         else:
             db.session.add(SiteSetting(key=k, value=str(v)))
     db.session.commit()
+    _cache.clear()
 
     settings = SiteSetting.query.all()
     return jsonify({s.key: s.value for s in settings}), 200
@@ -1601,7 +1605,7 @@ def get_home_data():
 
     try:
         # Fetch all required data concurrently (using DB queries which are fast)
-        hero = [s.to_dict() for s in HeroSlide.query.order_by(HeroSlide.id).all()]
+        hero = [s.to_dict() for s in HeroSlide.query.filter_by(is_active=True).order_by(HeroSlide.display_order, HeroSlide.id).all()]
         services = [
             s.to_dict() for s in ServiceCard.query.order_by(ServiceCard.id).all()
         ]
@@ -1770,5 +1774,25 @@ if __name__ == "__main__":
                         print(
                             f"Error checking/altering {col_name} column in sd_users: {e}"
                         )
+
+            # Self-healing migration for sd_payments
+            try:
+                payment_columns = [
+                    ("gateway_order_id", "VARCHAR(100)"),
+                    ("gateway_payment_id", "VARCHAR(100)"),
+                    ("payment_session_id", "VARCHAR(255)"),
+                    ("gateway", "VARCHAR(50) DEFAULT 'RAZORPAY'"),
+                    ("gateway_response", "TEXT"),
+                ]
+                for col_name, col_type in payment_columns:
+                    try:
+                        db.session.execute(
+                            db.text(f"ALTER TABLE sd_payments ADD COLUMN {col_name} {col_type};")
+                        )
+                        db.session.commit()
+                    except Exception:
+                        db.session.rollback()
+            except Exception as pe:
+                print(f"Error checking payment columns: {pe}")
 
     app.run(host="0.0.0.0", port=5000, debug=True)

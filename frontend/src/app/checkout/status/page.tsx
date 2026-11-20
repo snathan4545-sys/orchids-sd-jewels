@@ -23,12 +23,12 @@ export default function OrderStatusPage() {
       return;
     }
 
-    // Extract numeric order_id if passed as Cashfree format e.g., CF_ORD_12_1700000
     let numericOrderId = orderIdStr;
-    if (orderIdStr.startsWith('CF_ORD_')) {
+    if (orderIdStr.includes('_')) {
       const parts = orderIdStr.split('_');
-      if (parts.length >= 3) {
-        numericOrderId = parts[2];
+      const foundNumeric = parts.find((p) => /^\d+$/.test(p));
+      if (foundNumeric) {
+        numericOrderId = foundNumeric;
       }
     }
 

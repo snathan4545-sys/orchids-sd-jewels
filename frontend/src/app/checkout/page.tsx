@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useStore } from '../../context/StoreContext';
-import { ChevronRight, Check, ShieldCheck, CreditCard, ShoppingBag, CheckCircle, Copy, X } from 'lucide-react';
+import { ChevronRight, Check, ShieldCheck, CreditCard, ShoppingBag, CheckCircle } from 'lucide-react';
 import styles from './checkout.module.css';
 import { API_BASE_URL, BASE_URL } from '@/config';
-import { initiateCashfreeCheckout } from '@/services/paymentService';
+import { initiateRazorpayCheckout } from '@/services/paymentService';
 
 
 export default function CheckoutPage() {
@@ -24,18 +24,9 @@ export default function CheckoutPage() {
 
   // Checkout states
   const [shippingOption, setShippingOption] = useState<'free' | 'pickup' | 'flat'>('free');
-  const [paymentMethod, setPaymentMethod] = useState<'cashfree' | 'upi'>('cashfree');
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
   const [validationError, setValidationError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-
-  // UPI payment gateway states
-  const [upiId, setUpiId] = useState('mythu2124@oksbi');
-  const [merchantName, setMerchantName] = useState('SD Trends');
-  const [showUpiModal, setShowUpiModal] = useState(false);
-  const [currentOrderId, setCurrentOrderId] = useState<number | null>(null);
-  const [copiedUpi, setCopiedUpi] = useState(false);
-  const [loadingPayment, setLoadingPayment] = useState(false);
 
   // Auto-populate from logged-in user profile
   React.useEffect(() => {
@@ -45,17 +36,6 @@ export default function CheckoutPage() {
       setEmail(user.email || '');
     }
   }, [user]);
-
-  // Load UPI merchant details from settings
-  React.useEffect(() => {
-    fetch(`${API_BASE_URL}/settings`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.upi_id) setUpiId(data.upi_id);
-        if (data.upi_merchant_name) setMerchantName(data.upi_merchant_name);
-      })
-      .catch(err => console.error("Error loading UPI settings", err));
-  }, []);
 
   // Cart total calculations
   const cartSubtotal = cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
@@ -92,7 +72,7 @@ export default function CheckoutPage() {
         pincode: postcode,
         total_amount: cartTotal,
         status: 'Pending',
-        payment_method: paymentMethod === 'cashfree' ? 'Cashfree Payments' : 'UPI Direct',
+        payment_method: 'Razorpay',
         items: cart.map(item => ({
           name: item.product.name,
           price: item.product.price,
@@ -115,29 +95,29 @@ export default function CheckoutPage() {
       const orderData = await res.json();
       const newOrderId = orderData.id;
 
-      if (paymentMethod === 'cashfree') {
-        try {
-          await initiateCashfreeCheckout(newOrderId);
-          clearCart();
-          return;
-        } catch (cfErr: any) {
-          console.error("Cashfree Checkout error:", cfErr);
-          setValidationError(cfErr.message || "Failed to launch Cashfree payment gateway. Please try again.");
-          setSubmitting(false);
-          return;
-        }
-      } else if (paymentMethod === 'upi') {
-        setCurrentOrderId(newOrderId);
-        const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(merchantName)}&am=${cartTotal}&cu=INR&tn=${encodeURIComponent('Order ' + newOrderId)}`;
-        
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        if (isMobile) {
-          window.location.href = upiUrl;
-        }
-        setShowUpiModal(true);
-      } else {
-        setIsOrderPlaced(true);
-        clearCart();
+      try {
+        await initiateRazorpayCheckout({
+          orderId: newOrderId,
+          onSuccess: () => {
+            clearCart();
+            window.location.href = `/checkout/status?order_id=${newOrderId}&status=success`;
+          },
+          onError: (rzpErr: any) => {
+            console.error("Razorpay Checkout error:", rzpErr);
+            setValidationError(rzpErr.message || "Failed to complete payment via Razorpay. Please try again.");
+            setSubmitting(false);
+          },
+          onDismiss: () => {
+            setSubmitting(false);
+            setValidationError("Payment cancelled. You can retry anytime.");
+          }
+        });
+        return;
+      } catch (rzpErr: any) {
+        console.error("Razorpay launch error:", rzpErr);
+        setValidationError(rzpErr.message || "Failed to launch Razorpay payment gateway. Please try again.");
+        setSubmitting(false);
+        return;
       }
     } catch (err: any) {
       console.error(err);
@@ -145,37 +125,6 @@ export default function CheckoutPage() {
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const handleConfirmUpiPayment = async () => {
-    if (!currentOrderId) return;
-    setLoadingPayment(true);
-    try {
-      const res = await fetch(`${API_BASE_URL}/orders/${currentOrderId}/status`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'Pending Verification' })
-      });
-
-      if (res.ok) {
-        setShowUpiModal(false);
-        setIsOrderPlaced(true);
-        clearCart();
-      } else {
-        alert('Could not verify payment status. Please try again.');
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Network error verification failed.');
-    } finally {
-      setLoadingPayment(false);
-    }
-  };
-
-  const handleCopyUpi = () => {
-    navigator.clipboard.writeText(upiId);
-    setCopiedUpi(true);
-    setTimeout(() => setCopiedUpi(false), 2000);
   };
 
   // If order was successfully placed
@@ -471,43 +420,28 @@ export default function CheckoutPage() {
                   {/* Payment Gateway Details */}
                   <div className={styles.paymentSection}>
                     <p style={{ fontWeight: 600, fontSize: '0.95rem', margin: '0 0 0.75rem 0', color: 'var(--text-primary)' }}>
-                      Select Payment Method
+                      Payment Method
                     </p>
-                    
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '12px', border: paymentMethod === 'cashfree' ? '2px solid #ce967e' : '1px solid #e2e8f0', borderRadius: '8px', cursor: 'pointer', marginBottom: '12px', backgroundColor: paymentMethod === 'cashfree' ? '#fdf8f6' : '#ffffff' }}>
-                      <input 
-                        type="radio" 
-                        name="paymentMethod" 
-                        value="cashfree" 
-                        checked={paymentMethod === 'cashfree'} 
-                        onChange={() => setPaymentMethod('cashfree')}
-                        style={{ marginTop: '3px' }}
-                      />
-                      <div>
-                        <strong style={{ display: 'block', fontSize: '0.9rem', color: '#1a1a1a' }}>Cashfree Secure Payments (Recommended)</strong>
-                        <span style={{ fontSize: '0.8rem', color: '#666666' }}>Credit/Debit Cards, NetBanking, UPI (GPay, PhonePe, Paytm), & Wallets</span>
-                      </div>
-                    </label>
 
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '12px', border: paymentMethod === 'upi' ? '2px solid #ce967e' : '1px solid #e2e8f0', borderRadius: '8px', cursor: 'pointer', backgroundColor: paymentMethod === 'upi' ? '#fdf8f6' : '#ffffff' }}>
-                      <input 
-                        type="radio" 
-                        name="paymentMethod" 
-                        value="upi" 
-                        checked={paymentMethod === 'upi'} 
-                        onChange={() => setPaymentMethod('upi')}
-                        style={{ marginTop: '3px' }}
-                      />
-                      <div>
-                        <strong style={{ display: 'block', fontSize: '0.9rem', color: '#1a1a1a' }}>Direct UPI QR / App Link</strong>
-                        <span style={{ fontSize: '0.8rem', color: '#666666' }}>Scan UPI QR code or pay directly with deep links</span>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '14px', border: '2px solid #ce967e', borderRadius: '8px', backgroundColor: '#fdf8f6' }}>
+                      <CreditCard size={22} style={{ color: '#ce967e', marginTop: '2px', flexShrink: 0 }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                          <strong style={{ fontSize: '0.95rem', color: '#1a1a1a' }}>Razorpay Secure Checkout</strong>
+                          <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#12b76a', backgroundColor: '#ecfdf3', padding: '2px 8px', borderRadius: '12px' }}>
+                            100% Encrypted
+                          </span>
+                        </div>
+                        <span style={{ fontSize: '0.82rem', color: '#555555', lineHeight: '1.4', display: 'block' }}>
+                          Instant checkout via UPI (Google Pay, PhonePe, Paytm, BHIM), Credit/Debit Cards, NetBanking & Wallets
+                        </span>
                       </div>
-                    </label>
+                    </div>
                   </div>
 
                   {/* Place Order CTA */}
                   <button type="submit" className={styles.placeOrderBtn} disabled={submitting}>
-                    {submitting ? 'Processing Payment...' : paymentMethod === 'cashfree' ? 'Pay Now via Cashfree' : 'Pay Now via UPI'}
+                    {submitting ? 'Opening Razorpay...' : `Pay Now via Razorpay (₹${cartTotal})`}
                   </button>
 
                 </div>
@@ -520,109 +454,7 @@ export default function CheckoutPage() {
 
       </main>
 
-      {/* UPI Payment Modal */}
-      {showUpiModal && currentOrderId && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <div className={styles.modalHeader}>
-              <h3 className={styles.modalTitle}>UPI Payment</h3>
-              <button className={styles.modalClose} onClick={() => setShowUpiModal(false)}>
-                <X size={20} />
-              </button>
-            </div>
-            
-            <div className={styles.modalBody}>
-              <p className={styles.upiInstructions}>
-                Scan the QR code below using any UPI App (Google Pay, PhonePe, Paytm, BHIM, etc.) to pay.
-              </p>
-              
-              <div className={styles.qrContainer}>
-                {/* Dynamic QR Code from public API using upi://pay link */}
-                <img 
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-                    `upi://pay?pa=${upiId}&pn=${encodeURIComponent(merchantName)}&am=${cartTotal}&cu=INR&tn=${encodeURIComponent('Order ' + currentOrderId)}`
-                  )}`} 
-                  alt="UPI QR Code" 
-                  className={styles.qrImage}
-                />
-              </div>
-
-              {/* Mobile button to open UPI app directly */}
-              <a 
-                href={`upi://pay?pa=${upiId}&pn=${encodeURIComponent(merchantName)}&am=${cartTotal}&cu=INR&tn=${encodeURIComponent('Order ' + currentOrderId)}`}
-                className={styles.mobileUpiBtn}
-              >
-                <CreditCard size={18} />
-                Pay via UPI App
-              </a>
-              
-              <div className={styles.payDetailsCard}>
-                <div className={styles.detailRow}>
-                  <span className={styles.detailLabel}>Merchant:</span>
-                  <span className={styles.detailVal}>{merchantName}</span>
-                </div>
-                <div className={styles.detailRow}>
-                  <span className={styles.detailLabel}>Amount:</span>
-                  <span className={styles.detailVal} style={{ color: '#d93025' }}>₹{cartTotal}</span>
-                </div>
-                <div className={styles.detailRow}>
-                  <span className={styles.detailLabel}>Order ID:</span>
-                  <span className={styles.detailVal}>#{currentOrderId}</span>
-                </div>
-                <div className={styles.detailRow} style={{ flexDirection: 'column', alignItems: 'stretch', gap: '4px', marginTop: '4px' }}>
-                  <span className={styles.detailLabel}>UPI ID:</span>
-                  <div className={styles.upiIdWrapper}>
-                    <span className={styles.upiIdText}>{upiId}</span>
-                    <button type="button" className={styles.copyBtn} onClick={handleCopyUpi}>
-                      {copiedUpi ? (
-                        <>
-                          <Check size={12} style={{ display: 'inline', marginRight: '4px' }} />
-                          Copied
-                        </>
-                      ) : (
-                        <>
-                          <Copy size={12} style={{ display: 'inline', marginRight: '4px' }} />
-                          Copy
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-              
-              <div className={styles.stepsBlock}>
-                <h4 style={{ margin: '0 0 0.5rem 0', color: '#334155', fontWeight: 600 }}>How to complete payment:</h4>
-                <ol className={styles.stepsList}>
-                  <li>Open Google Pay, PhonePe, Paytm, or BHIM.</li>
-                  <li>Scan the QR code, or click "Pay via UPI App" on mobile.</li>
-                  <li>Authorize the payment of ₹{cartTotal} to {merchantName}.</li>
-                  <li>After authorizing, click <strong>"Verify Payment"</strong> below to complete your order.</li>
-                </ol>
-              </div>
-              
-              <div className={styles.modalActions}>
-                <button 
-                  type="button" 
-                  className={styles.verifyBtn} 
-                  onClick={handleConfirmUpiPayment}
-                  disabled={loadingPayment}
-                >
-                  {loadingPayment ? 'Verifying...' : 'Verify Payment'}
-                </button>
-                <button 
-                  type="button" 
-                  className={styles.cancelBtn} 
-                  onClick={() => setShowUpiModal(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      
     </div>
   );
 }
+

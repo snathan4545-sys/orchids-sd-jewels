@@ -159,7 +159,7 @@ export default function NewProductPage() {
         uploadedUrls.push(publicUrl);
       } catch (err) {
         console.error('Upload Error:', err);
-        alert(`Failed to upload ${file.name}`);
+        alert(`Failed to upload ${file.name}: ${(err as any)?.message || JSON.stringify(err)}`);
       }
     }
     
@@ -178,7 +178,7 @@ export default function NewProductPage() {
       return publicUrl;
     } catch (err) {
       console.error('Upload Error:', err);
-      alert(`Failed to upload description image`);
+      alert(`Failed to upload description image: ${(err as any)?.message || JSON.stringify(err)}`);
       return null;
     }
   };

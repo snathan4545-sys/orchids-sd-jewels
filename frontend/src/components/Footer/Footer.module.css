@@ -8,7 +8,7 @@
 
 /* Upper Tier Newsletter Section */
 .newsletterSection {
-  background-image: url('/images/newsletter_background.png');
+  background-color: rgb(246, 235, 230);
   background-repeat: no-repeat;
   background-position: center right;
   background-size: cover;
@@ -18,10 +18,23 @@
   border-bottom: 1px solid var(--border-color);
 }
 
+.newsletterOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.78) 45%, rgba(255, 255, 255, 0.15) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
 :global([data-theme="dark"]) .newsletterSection {
-  background-image: url('/images/newsletter_background.png');
-  background-color: rgba(0, 0, 0, 0.45);
-  background-blend-mode: overlay;
+  background-color: var(--bg-secondary);
+}
+
+:global([data-theme="dark"]) .newsletterOverlay {
+  background: linear-gradient(to right, rgba(20, 20, 20, 0.95) 0%, rgba(20, 20, 20, 0.8) 45%, rgba(20, 20, 20, 0.25) 100%);
 }
 
 .newsletterContainer {
@@ -33,15 +46,18 @@
   min-height: 250px;
   align-items: center;
   justify-content: space-between;
+  z-index: 2;
 }
 
 @media (max-width: 768px) {
   .newsletterSection {
-    background-image: none !important;
-    background-color: rgb(246, 235, 230);
+    background-position: center center;
   }
-  :global([data-theme="dark"]) .newsletterSection {
-    background-color: var(--bg-secondary);
+  .newsletterOverlay {
+    background: rgba(255, 255, 255, 0.88);
+  }
+  :global([data-theme="dark"]) .newsletterOverlay {
+    background: rgba(20, 20, 20, 0.88);
   }
   .newsletterContainer {
     flex-direction: column;

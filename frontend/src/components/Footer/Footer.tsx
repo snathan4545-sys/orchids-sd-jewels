@@ -97,13 +97,13 @@ export default function Footer({ settings: initialSettings = {}, footerLinks: in
   };
 
   const settings = {
-    footer_about_text: initialSettings.footer_about_text || fetchedSettings.footer_about_text || '',
-    footer_address: initialSettings.footer_address || fetchedSettings.footer_address || '',
-    footer_phone: initialSettings.footer_phone || fetchedSettings.footer_phone || '',
-    footer_email: initialSettings.footer_email || fetchedSettings.footer_email || '',
-    newsletter_title: initialSettings.newsletter_title || fetchedSettings.newsletter_title || 'Subscribe To Our Newsletter',
-    newsletter_subtitle: initialSettings.newsletter_subtitle || fetchedSettings.newsletter_subtitle || 'Subscribe to our latest newsletter to get news about special discounts.',
-    newsletter_bg_image: initialSettings.newsletter_bg_image || fetchedSettings.newsletter_bg_image || '',
+    footer_about_text: fetchedSettings.footer_about_text || initialSettings.footer_about_text || '',
+    footer_address: fetchedSettings.footer_address || initialSettings.footer_address || '',
+    footer_phone: fetchedSettings.footer_phone || initialSettings.footer_phone || '',
+    footer_email: fetchedSettings.footer_email || initialSettings.footer_email || '',
+    newsletter_title: fetchedSettings.newsletter_title || initialSettings.newsletter_title || 'Subscribe To Our Newsletter',
+    newsletter_subtitle: fetchedSettings.newsletter_subtitle || initialSettings.newsletter_subtitle || 'Subscribe to our latest newsletter to get news about special discounts.',
+    newsletter_bg_image: fetchedSettings.newsletter_bg_image || initialSettings.newsletter_bg_image || '',
   };
 
   const links = initialLinks.length > 0 ? initialLinks : fetchedLinks;
@@ -118,8 +118,16 @@ export default function Footer({ settings: initialSettings = {}, footerLinks: in
       {/* Upper Newsletter Subscription */}
       <div 
         className={styles.newsletterSection}
-        style={settings.newsletter_bg_image ? { backgroundImage: `url("${settings.newsletter_bg_image}")` } : undefined}
+        style={settings.newsletter_bg_image ? {
+          backgroundImage: `url("${settings.newsletter_bg_image}")`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center right',
+          backgroundRepeat: 'no-repeat',
+        } : undefined}
       >
+        {settings.newsletter_bg_image && (
+          <div className={styles.newsletterOverlay} />
+        )}
         <div className={styles.newsletterContainer}>
           <div className={styles.newsletterLeft}>
             <h2 className={styles.newsTitle}>{settings.newsletter_title}</h2>
