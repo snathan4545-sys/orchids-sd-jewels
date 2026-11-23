@@ -31,7 +31,8 @@
 }
 
 .leftBanner .textBlock {
-  transform: translateY(-45px);
+  max-width: 440px;
+  transform: translateY(-40px);
 }
 
 .rightStack {
@@ -41,15 +42,22 @@
   height: 590px;
 }
 
+.rightStack .textBlock {
+  max-width: 360px;
+  transform: none;
+}
+
 @media (max-width: 768px) {
   .leftBanner {
-    height: 300px;
+    height: 320px;
   }
   .leftBanner .textBlock {
     transform: translateY(0);
+    max-width: 100%;
   }
   .textBlock {
     transform: translateY(0);
+    max-width: 100%;
   }
   .rightStack {
     height: auto;
@@ -57,17 +65,17 @@
     gap: 1.5rem;
   }
   .rightStack .banner {
-    min-height: 300px;
-    height: 300px;
+    min-height: 290px;
+    height: 290px;
   }
 }
 
 @media (max-width: 576px) {
   .leftBanner {
-    height: 280px;
+    height: 290px;
   }
   .rightStack {
-    gap: 1.5rem;
+    gap: 1.25rem;
   }
   .rightStack .banner {
     min-height: 280px;
@@ -112,9 +120,13 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 3.5rem;
+  padding: 3rem;
   z-index: 2;
   pointer-events: none;
+}
+
+.rightStack .overlay {
+  padding: 1.75rem 2.25rem;
 }
 
 .overlay * {
@@ -130,50 +142,85 @@
 }
 
 .textBlock {
-  max-width: 280px;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  transform: translateY(-20px);
+  transform: translateY(-10px);
 }
 
 .subtitle {
   font-family: var(--font-roboto), sans-serif !important;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  font-size: 0.8rem;
-  color: #555555;
+  font-size: 0.95rem;
+  color: #1A1816;
   margin-bottom: 0.5rem;
+  text-shadow: 
+    0 1px 3px rgba(255, 255, 255, 0.95), 
+    0 0 10px rgba(255, 255, 255, 0.85);
+}
+
+:global([data-theme="dark"]) .subtitle {
+  color: #F0EDE8;
+  text-shadow: 
+    0 1px 4px rgba(0, 0, 0, 0.95), 
+    0 0 10px rgba(0, 0, 0, 0.85);
 }
 
 .title {
   font-family: var(--font-roboto), sans-serif !important;
-  font-size: 1.5rem;
-  font-weight: 400;
-  margin-bottom: 1.25rem;
-  line-height: 1.3;
+  font-size: 1.95rem;
+  font-weight: 700;
+  margin-bottom: 1.15rem;
+  line-height: 1.22;
   color: #111111;
+  letter-spacing: 0.01em;
+  text-shadow: 
+    0 1px 3px rgba(255, 255, 255, 0.95), 
+    0 0 12px rgba(255, 255, 255, 0.85),
+    0 0 20px rgba(255, 255, 255, 0.65);
+}
+
+:global([data-theme="dark"]) .title {
+  color: #FFFFFF;
+  text-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.95), 
+    0 0 14px rgba(0, 0, 0, 0.85),
+    0 0 22px rgba(0, 0, 0, 0.7);
 }
 
 .leftBanner .title {
-  font-size: 2rem;
+  font-size: 2.65rem;
+  font-weight: 800;
+  line-height: 1.16;
+  margin-bottom: 1.35rem;
 }
 
 .link {
   font-family: var(--font-roboto), sans-serif !important;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.98rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.16em;
   color: #111111;
   display: inline-block;
-  border-bottom: 2px solid #111111;
+  border-bottom: 2.5px solid #111111;
   width: fit-content;
-  padding-bottom: 2px;
+  padding-bottom: 3px;
   transition: all var(--transition-fast);
   text-decoration: none;
+  text-shadow: 
+    0 1px 2px rgba(255, 255, 255, 0.9), 
+    0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+:global([data-theme="dark"]) .link {
+  color: #FFFFFF;
+  border-bottom-color: #FFFFFF;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
 }
 
 .banner:hover .link {
@@ -185,11 +232,20 @@
   .overlay {
     padding: 2rem;
   }
+  .rightStack .overlay {
+    padding: 1.5rem;
+  }
+  .subtitle {
+    font-size: 0.88rem;
+  }
   .title {
-    font-size: 1.3rem;
+    font-size: 1.65rem;
   }
   .leftBanner .title {
-    font-size: 1.6rem;
+    font-size: 2.15rem;
+  }
+  .link {
+    font-size: 0.9rem;
   }
 }
 
@@ -197,19 +253,25 @@
   .overlay {
     padding: 1.5rem;
   }
+  .rightStack .overlay {
+    padding: 1.25rem 1.5rem;
+  }
   .subtitle {
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.12em;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.14em;
   }
   .title {
-    font-size: 1.4rem;
+    font-size: 1.55rem;
     margin-bottom: 1rem;
+    font-weight: 700;
   }
   .leftBanner .title {
-    font-size: 1.4rem;
+    font-size: 1.75rem;
+    font-weight: 800;
   }
   .link {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 700;
   }
 }
